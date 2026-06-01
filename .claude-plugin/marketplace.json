@@ -1,0 +1,109 @@
+{
+  "name": "bubble-skills",
+  "owner": {
+    "name": "Bubble Invest",
+    "email": "contact@bubbleinvest.org"
+  },
+  "metadata": {
+    "description": "Free, open-source Claude Code skills by Bubble Invest \u2014 small sharp utilities for agentic workflows.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "socratic-spec",
+      "source": "./socratic-spec",
+      "description": "Run a Socratic specification interview to turn a vague idea into a precise, buildable spec before writing any code.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "productivity",
+      "keywords": [
+        "spec",
+        "planning",
+        "requirements",
+        "socratic"
+      ]
+    },
+    {
+      "name": "suno-extract",
+      "source": "./suno-extract",
+      "description": "Extract the MP3 from any Suno song URL via the public API. No key needed.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "media",
+      "keywords": [
+        "suno",
+        "audio",
+        "mp3",
+        "music",
+        "download"
+      ]
+    },
+    {
+      "name": "telegram-reporter",
+      "source": "./telegram-reporter",
+      "description": "Send Telegram messages from any script or cron via curl. Reads a bot token from a config file.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "automation",
+      "keywords": [
+        "telegram",
+        "notifications",
+        "cron",
+        "messaging"
+      ]
+    },
+    {
+      "name": "scheduled-task-creation",
+      "source": "./scheduled-task-creation",
+      "description": "Step-by-step guide for creating and debugging Claude Desktop scheduled tasks (local routines).",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "automation",
+      "keywords": [
+        "scheduled-tasks",
+        "cron",
+        "claude-desktop",
+        "routines"
+      ]
+    },
+    {
+      "name": "notion-linker",
+      "source": "./notion-linker",
+      "description": "Automatically link published content (articles, posts) back to project rows in a Notion database.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "productivity",
+      "keywords": [
+        "notion",
+        "content",
+        "automation",
+        "linking"
+      ]
+    },
+    {
+      "name": "local-tts",
+      "source": "vdk888/local-tts",
+      "description": "Local text-to-speech (VoxCPM2, 30 languages, voice cloning). Free, offline, Apple Silicon.",
+      "license": "MIT",
+      "category": "media",
+      "keywords": [
+        "tts",
+        "voice",
+        "local",
+        "offline"
+      ]
+    },
+    {
+      "name": "boycott-filter",
+      "source": "vdk888/boycott-filter",
+      "description": "Tell your agent which brands to avoid; a Chrome extension warns you on their pages with your own reasons.",
+      "license": "MIT",
+      "category": "productivity",
+      "keywords": [
+        "boycott",
+        "ethics",
+        "chrome-extension"
+      ]
+    }
+  ]
+}
