@@ -81,6 +81,33 @@
       ]
     },
     {
+      "name": "generate-image",
+      "source": "./generate-image",
+      "description": "Generate images locally with FLUX.2 Klein via mflux on Apple Silicon. Free, offline, no API calls.",
+      "license": "Apache-2.0",
+      "category": "media",
+      "keywords": [
+        "image",
+        "flux",
+        "local",
+        "offline",
+        "generation"
+      ]
+    },
+    {
+      "name": "notion-reader",
+      "source": "./notion-reader",
+      "description": "Query a Notion database or page from any script. Reads a token from config; DB/page IDs via env vars.",
+      "license": "MIT",
+      "category": "productivity",
+      "keywords": [
+        "notion",
+        "query",
+        "read",
+        "automation"
+      ]
+    },
+    {
       "name": "local-tts",
       "source": "vdk888/local-tts",
       "description": "Local text-to-speech (VoxCPM2, 30 languages, voice cloning). Free, offline, Apple Silicon.",
