@@ -1,14 +1,14 @@
 {
   "name": "voice-transcribe",
   "version": "1.0.0",
-  "description": "",
+  "description": "Local offline voice/audio transcription (whisper.cpp) \u2014 Ogg/Opus, WAV, MP3, FLAC.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Bubble Invest",
+  "license": "MIT",
   "dependencies": {
     "ogg-opus-decoder": "^1.7.3"
   }

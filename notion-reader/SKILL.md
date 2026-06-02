@@ -1,7 +1,12 @@
 ---
 name: notion-reader
-description: Query Notion logbook and writing guidelines. Shared utility for all content and audit crons.
+description: Query a Notion database or page from any script. Use when you need to read rows, properties, or page content from Notion. Reads a token from config; database/page IDs via env vars.
+version: 1.0.0
+author: Bubble Invest
+license: MIT
 user-invocable: false
+allowed-tools:
+  - Bash
 ---
 
 # Notion Reader — Shared Utility

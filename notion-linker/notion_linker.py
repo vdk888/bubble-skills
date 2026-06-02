@@ -33,7 +33,7 @@ def _get_notes(project_id: str) -> str:
     """Fetch current Notes text from a project page."""
     resp = requests.get(f"https://api.notion.com/v1/pages/{project_id}", headers=_headers())
     if resp.status_code != 200:
-        print(f"ERROR: Could not fetch project {project_id}: {resp.text}")
+        print(f"ERROR: Could not fetch project {project_id}: HTTP {resp.status_code}")
         return ""
     data = resp.json()
     notes = ""
@@ -55,7 +55,7 @@ def _write_notes(project_id: str, notes: str) -> bool:
     resp = requests.patch(f"https://api.notion.com/v1/pages/{project_id}", headers=_headers(), json=payload)
     if resp.status_code == 200:
         return True
-    print(f"ERROR: Failed to update project {project_id}: {resp.text}")
+    print(f"ERROR: Failed to update project {project_id}: HTTP {resp.status_code}")
     return False
 
 
@@ -151,7 +151,7 @@ def sync_published(days: int = 7, dry_run: bool = False):
         if not dry_run and linked:
             _write_notes(SUBSTACK_PROJECT_ID, substack_notes)
     else:
-        print(f"  ERROR querying Substack tracker: {resp.text}")
+        print(f"  ERROR querying Substack tracker: HTTP {resp.status_code}")
 
     # --- LinkedIn ---
     print(f"\n=== LinkedIn Tracker (last {days} days) ===")
@@ -191,7 +191,7 @@ def sync_published(days: int = 7, dry_run: bool = False):
         if not dry_run and li_linked:
             _write_notes(LINKEDIN_PROJECT_ID, linkedin_notes)
     else:
-        print(f"  ERROR querying LinkedIn tracker: {resp.text}")
+        print(f"  ERROR querying LinkedIn tracker: HTTP {resp.status_code}")
 
     print(f"\n✅ Done — {linked} linked, {skipped} already present")
 

@@ -15,7 +15,6 @@ These are building blocks we use to run an AI-native investment firm. We open-so
 
 | Skill | What it does |
 |-------|--------------|
-| **socratic-spec** | A Socratic interview that turns a vague idea into a precise, buildable spec before any code. |
 | **suno-extract** | Extract the MP3 from any Suno song URL. No key needed. |
 | **telegram-reporter** | Send Telegram messages from any script or cron via curl. |
 | **scheduled-task-creation** | Guide for creating and debugging Claude Desktop scheduled tasks. |

@@ -1,7 +1,12 @@
 ---
 name: telegram-reporter
-description: Send Telegram messages via curl. Send Telegram messages via curl from any script or cron. Reads a bot token from a config file.
+description: Send Telegram messages from any script or cron via curl. Use when you need to send a notification, alert, or report to a Telegram chat. Reads a bot token from a config file.
+version: 1.0.0
+author: Bubble Invest
+license: MIT
 user-invocable: false
+allowed-tools:
+  - Bash
 ---
 
 # Telegram Reporter — Shared Utility
@@ -18,7 +23,7 @@ curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
   -d "{\"chat_id\": \"${CHAT_ID}\", \"text\": $(echo "$MESSAGE" | python3 -c 'import json,sys;print(json.dumps(sys.stdin.read()))'), \"parse_mode\": \"Markdown\"}"
 ```
 
-## Send to Joris + Jade
+## Send to one or more recipients
 
 ```bash
 BOT_TOKEN=$(cat ~/.config/telegram/bot_token_$CHANNEL)
@@ -33,20 +38,6 @@ done
 
 | Agent | Token file | Chat targets |
 |-------|-----------|--------------|
-| Content | bot_token_socials | Joris + Jade |
-| Security | bot_token_security | Joris only |
-| Lab | bot_token_rnd | Joris only |
-
-## Heartbeat
-
-```bash
-  -H 'Content-Type: application/json' \
-  -d "{\"task\":\"$TASK_NAME\",\"severity\":\"heartbeat\",\"message\":\"Completed at $(date +%H:%M). $OUTCOME\"}"
-```
-
-## Error Report
-
-```bash
-  -H 'Content-Type: application/json' \
-  -d "{\"task\":\"$TASK_NAME\",\"severity\":\"error\",\"message\":\"$ERROR_DESCRIPTION\"}"
-```
+| socials | bot_token_socials | your configured chat(s) |
+| security | bot_token_security | your configured chat(s) |
+| rnd | bot_token_rnd | your configured chat(s) |

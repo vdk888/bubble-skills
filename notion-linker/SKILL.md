@@ -1,6 +1,11 @@
 ---
 name: notion-linker
-description: Automatically link content (Substack articles, LinkedIn posts) to Notion projects
+description: Automatically link published content (Substack articles, LinkedIn posts) back to project rows in a Notion database. Use after publishing content to record the live URL on its Notion project.
+version: 1.0.0
+author: Bubble Invest
+license: MIT
+allowed-tools:
+  - Bash
 ---
 
 # Notion Linker
