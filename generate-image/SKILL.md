@@ -1,5 +1,8 @@
 ---
 name: generate-image
+version: 1.0.0
+author: Bubble Invest
+license: Apache-2.0
 description: Generate images locally using FLUX.2 Klein 4B via mflux on Apple Silicon. Use when asked to create, generate, or make an image, illustration, photo, thumbnail, cover art, banner, or visual. Free, no API calls. Outputs PNG.
 user-invocable: true
 allowed-tools:
@@ -118,7 +121,7 @@ done
 bash ${CLAUDE_SKILL_DIR}/scripts/generate.sh \
   --prompt "your detailed blog cover prompt" \
   --width 768 --height 512 \
-  --out ~/claude-workspaces/Miranda_Socials/assets/cover.png
+  --out ~/blog-assets/cover.png
 ```
 
 ## Performance (Apple M4 16GB)

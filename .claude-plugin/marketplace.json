@@ -10,20 +10,6 @@
   },
   "plugins": [
     {
-      "name": "socratic-spec",
-      "source": "./socratic-spec",
-      "description": "Run a Socratic specification interview to turn a vague idea into a precise, buildable spec before writing any code.",
-      "version": "1.0.0",
-      "license": "MIT",
-      "category": "productivity",
-      "keywords": [
-        "spec",
-        "planning",
-        "requirements",
-        "socratic"
-      ]
-    },
-    {
       "name": "suno-extract",
       "source": "./suno-extract",
       "description": "Extract the MP3 from any Suno song URL via the public API. No key needed.",
@@ -92,7 +78,8 @@
         "local",
         "offline",
         "generation"
-      ]
+      ],
+      "version": "1.0.0"
     },
     {
       "name": "notion-reader",
@@ -105,7 +92,8 @@
         "query",
         "read",
         "automation"
-      ]
+      ],
+      "version": "1.0.0"
     },
     {
       "name": "voice-transcribe",
@@ -120,7 +108,8 @@
         "audio",
         "offline",
         "voice"
-      ]
+      ],
+      "version": "1.0.0"
     },
     {
       "name": "local-tts",
