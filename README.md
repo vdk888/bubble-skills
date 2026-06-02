@@ -22,6 +22,7 @@ These are building blocks we use to run an AI-native investment firm. We open-so
 | **notion-linker** | Auto-link published content back to project rows in a Notion database. |
 | **generate-image** | Generate images locally with FLUX.2 Klein (Apple Silicon). Free, offline, no API. |
 | **notion-reader** | Query a Notion database or page from any script. |
+| **voice-transcribe** | Transcribe voice notes / audio to text locally & offline (whisper.cpp, no API key). |
 | **local-tts** | Local text-to-speech (30 languages, voice cloning). → [vdk888/local-tts](https://github.com/vdk888/local-tts) |
 | **boycott-filter** | Brand-boycott enforcer + Chrome extension. → [vdk888/boycott-filter](https://github.com/vdk888/boycott-filter) |
 
