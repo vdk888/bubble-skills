@@ -108,6 +108,21 @@
       ]
     },
     {
+      "name": "voice-transcribe",
+      "source": "./voice-transcribe",
+      "description": "Transcribe voice notes / audio files to text locally and offline (whisper.cpp, no API key) \u2014 Telegram .oga, wav, mp3, flac. FR/EN/auto.",
+      "license": "MIT",
+      "category": "media",
+      "keywords": [
+        "transcription",
+        "speech-to-text",
+        "whisper",
+        "audio",
+        "offline",
+        "voice"
+      ]
+    },
+    {
       "name": "local-tts",
       "source": "vdk888/local-tts",
       "description": "Local text-to-speech (VoxCPM2, 30 languages, voice cloning). Free, offline, Apple Silicon.",
