@@ -1,5 +1,8 @@
 ---
 name: suno-extract
+version: 1.0.0
+author: Bubble Invest
+license: MIT
 description: Extract MP3 audio from Suno URLs. Use when asked to download a Suno song, extract audio from suno.com, or convert a Suno link to MP3. Works with both full URLs (suno.com/song/UUID) and short URLs (suno.com/s/xxx).
 allowed-tools:
   - Bash
@@ -90,16 +93,3 @@ Same pattern — use `video_url` instead of `audio_url`:
 VIDEO=$(echo "$META" | python3 -c "import json,sys; print(json.load(sys.stdin).get('video_url',''))")
 curl -sL -H "Referer: https://suno.com/" -o /tmp/suno_video.mp4 "$VIDEO"
 ```
-
-## Music DNA integration
-
-A PR is open to add Suno extraction to Jade's Music DNA app:
-https://github.com/jadehng/music-dna/pull/1
-
-The Netlify function at `netlify/functions/suno-audio.js` implements this same pipeline as a serverless function.
-
-## Limitations
-
-- Only works for **public** songs. Private songs return empty audio_url.
-- CDN URLs may change — if `cdn1.suno.ai` stops working, check `cdn2.suno.ai`.
-- No bulk/playlist download — one song at a time via the API.
