@@ -1,6 +1,13 @@
 ---
 name: scheduled-task-creation
-description: Step-by-step guide for creating Claude Desktop scheduled tasks. Use when creating, registering, or debugging a new automated scheduled task in the Desktop app.
+description: Step-by-step guide for creating, registering, and debugging Claude Desktop scheduled tasks. Use when creating, registering, or debugging an automated scheduled task in the Desktop app.
+version: 1.0.0
+author: Bubble Invest
+license: MIT
+allowed-tools:
+  - Bash
+  - Read
+  - Edit
 ---
 
 # Creating Claude Desktop Scheduled Tasks
@@ -45,7 +52,7 @@ Registry entry schema:
   "createdAt": 1775643180398,
   "cwd": "/Users/YOU",
   "useWorktree": false,
-  "permissionMode": "bypassPermissions",
+  "permissionMode": "acceptEdits",
   "notifySessionId": "optional-session-id"
 }
 ```
@@ -100,7 +107,7 @@ New entry to add:
   "createdAt": 1775643180398,
   "cwd": "/Users/YOU",
   "useWorktree": false,
-  "permissionMode": "bypassPermissions"
+  "permissionMode": "acceptEdits"
 }
 ```
 
@@ -125,7 +132,7 @@ Open Claude Desktop → Scheduled Tasks. The new task should appear. If it doesn
 
 **Minimum interval** — 1 minute for Desktop tasks.
 
-**`permissionMode`** — use `"bypassPermissions"` for fully automated tasks that need to act without prompts.
+**`permissionMode`** — use `"acceptEdits"` for most automated tasks (auto-approves file edits, still prompts for riskier actions). ⚠️ `"bypassPermissions"` runs with NO prompts at all — only opt into it for a task you fully trust, since a scheduled task running unattended with bypassed permissions can take any action without review.
 
 **`useWorktree`** — set `true` if the task should run in an isolated git worktree. Usually `false`.
 
@@ -173,6 +180,6 @@ Registry entry in `scheduled-tasks.json`:
   "createdAt": 1775643180398,
   "cwd": "/Users/YOU",
   "useWorktree": false,
-  "permissionMode": "bypassPermissions"
+  "permissionMode": "acceptEdits"
 }
 ```
