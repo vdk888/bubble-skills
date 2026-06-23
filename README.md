@@ -1,41 +1,84 @@
-# Bubble Skills
+# Bubble Skills — The Bubble Shop
 
-Free, open-source [Claude Code](https://claude.com/claude-code) skills by [Bubble Invest](https://bubbleinvest.org) — small, sharp utilities for agentic workflows.
+Free, open-source [Claude Code](https://claude.com/claude-code) skills and plugins by [Bubble Invest](https://bubbleinvest.org).
 
-These are building blocks we use to run an AI-native investment firm. We open-source the generic ones because the best way to show what's possible with agents is to let you run them yourself.
+We're not developers — we built and use these tools to run our own family office. They're free, MIT. We'd love the community's help to improve them.
 
-## Install
+## One-command install
 
 ```
 /plugin marketplace add vdk888/bubble-skills
 /plugin install <skill-name>
 ```
 
-## Skills
+That's it. Every skill and plugin below becomes available in your Claude Code agent.
+
+## What's in the shop
+
+### Media
 
 | Skill | What it does |
 |-------|--------------|
+| **generate-image** | Generate images locally with FLUX.2 Klein (Apple Silicon). Free, offline, no API. |
+| **local-tts** | Local text-to-speech: 30 languages, voice cloning, VoxCPM2. Free, offline. → [vdk888/local-tts](https://github.com/vdk888/local-tts) |
+| **voice-transcribe** | Transcribe voice notes / audio to text locally & offline (whisper.cpp, no API key). |
 | **suno-extract** | Extract the MP3 from any Suno song URL. No key needed. |
+| **longform-video** | Turn an article into a 1–5 min narrated landscape video essay: Remotion + local TTS voice cloning + Pexels b-roll + kinetic typography. |
+
+### Automation & Cron
+
+| Skill | What it does |
+|-------|--------------|
 | **telegram-reporter** | Send Telegram messages from any script or cron via curl. |
 | **scheduled-task-creation** | Guide for creating and debugging Claude Desktop scheduled tasks. |
-| **notion-linker** | Auto-link published content back to project rows in a Notion database. |
-| **generate-image** | Generate images locally with FLUX.2 Klein (Apple Silicon). Free, offline, no API. |
-| **notion-reader** | Query a Notion database or page from any script. |
-| **voice-transcribe** | Transcribe voice notes / audio to text locally & offline (whisper.cpp, no API key). |
-| **longform-video** | Turn an article into a 1-5 min narrated landscape video essay: Remotion + local TTS voice cloning + Pexels b-roll + kinetic typography. |
-| **deepseek-brain** | Run Claude Code on DeepSeek instead of Anthropic, keeping the full harness. The reasoning-effort proxy, model routing, channels fix, and rollback. |
-| **fund-source-verification** | Source-tier + independent-verification rubric before you act on any third-party claim. Tier gating, corroboration math, paywall discipline. |
-| **fund-thesis-format** | A 7-part investment-thesis structure (claim → mechanism → fit → invalidation → sizing → asymmetry → conviction levers) that renders as a file, a memo, or a chat message. |
-| **cron-preflight** | Pre-flight scaffolding for scheduled tasks: catch-up SKEW math, policy-hash gate, source verifier. |
+| **cron-preflight** | Pre-flight scaffolding: catch-up SKEW math, policy-hash gate, source verifier. |
 | **cron-postflight** | Post-flight scaffolding: audit-log row, git commit + push with lane discipline, notification send. |
-| **publish-substack-note** | Publish a short-form Substack Note (image-first) via the Claude-in-Chrome extension. |
-| **publish-substack-post** | Publish or schedule a long-form Substack Post (inline images, hero, subscribe button) via Playwright — the selectors + timing that actually work. |
-| **local-tts** | Local text-to-speech (30 languages, voice cloning). → [vdk888/local-tts](https://github.com/vdk888/local-tts) |
+| **deepseek-brain** | Run Claude Code on DeepSeek instead of Anthropic, keeping the full harness. |
+
+### Productivity
+
+| Skill | What it does |
+|-------|--------------|
+| **notion-linker** | Auto-link published content back to project rows in a Notion database. |
+| **notion-reader** | Query a Notion database or page from any script. |
 | **boycott-filter** | Brand-boycott enforcer + Chrome extension. → [vdk888/boycott-filter](https://github.com/vdk888/boycott-filter) |
 
-These are building blocks we actually run to operate the firm — we're not professional developers, we built them for ourselves and open-source the generic ones. Found a bug or a sharper way to do it? Open an issue or a PR — help us improve them.
+### Content
 
-`local-tts` and `boycott-filter` ship from their own repos (linked above) and are included in this marketplace for one-stop install.
+| Skill | What it does |
+|-------|--------------|
+| **publish-substack-note** | Publish a short-form Substack Note (image-first) via the Claude-in-Chrome extension. |
+| **publish-substack-post** | Publish or schedule a long-form Substack Post (inline images, hero, subscribe button) via Playwright — the selectors + timing that actually work. |
+
+### Research & Investing
+
+| Skill | What it does |
+|-------|--------------|
+| **fund-source-verification** | Source-tier + independent-verification rubric before you act on any third-party claim. Tier gating, corroboration math, paywall discipline. |
+| **fund-thesis-format** | A 7-part investment-thesis structure (claim → mechanism → fit → invalidation → sizing → asymmetry → conviction levers) that renders as a file, a memo, or a chat message. |
+
+### Security & Privacy
+
+| Skill | What it does |
+|-------|--------------|
+| **bubble-shield** | PreToolUse guard that blocks reads of protected client folders until data is anonymised. 100% local, fail-closed (GDPR art. 25 & 32). → [vdk888/bubble-shield-public](https://github.com/vdk888/bubble-shield-public) |
+
+## Coming at launch
+
+These tools are in active development internally. We'll open them up as part of a coordinated release:
+
+- **audio-listener** — always-on voice assistant that wakes on a keyword, executes agent tasks, replies via TTS. (Bubble-invest/audio-listener)
+- **bubble-ops-loop** — the agentic operating loop powering our family office: board triage, dept-manager dispatch, wiki compile, cron health. (Bubble-invest/bubble-ops-loop)
+- **bubble-vps-platform** — VPS provisioning + hardening framework for self-hosted agent infrastructure. (Bubble-invest/bubble-vps-platform)
+- **bubble-cabinet** — secure secrets and config management for multi-agent deployments. (Bubble-invest/bubble-cabinet)
+- **bubble-artist** — AI-native design agent for generative brand assets and visual content pipelines.
+- **ben-example-agent** — a fully-wired example of a domain dept-manager agent (investment desk) with live broker integrations.
+
+## More Bubble marketplaces
+
+The following repos ship their own standalone marketplaces — add them independently if you want just those plugins:
+
+- `Bubble-invest/bubble-shield` — the internal (private) Bubble Shield marketplace (same plugin as above, internal versioning)
 
 ## License
 
@@ -44,3 +87,5 @@ MIT — see [LICENSE](LICENSE). Use them, fork them, build on them.
 ---
 
 Made by [Bubble Invest](https://bubbleinvest.org) · Navigating the AI transition, one agent at a time.
+
+We're not professional developers. We built these tools to run our own firm, and we open-source the generic ones because the best way to show what's possible with agents is to let you run them yourself. Found a bug or a sharper way to do it? Open an issue or a PR — we'd love the help.
