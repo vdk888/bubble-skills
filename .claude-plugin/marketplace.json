@@ -281,7 +281,7 @@
     {
       "name": "prospect-research",
       "source": "./prospect-research",
-      "description": "Build or refresh a structured Research Capsule for any sales prospect: background, workflow pain points, recent signals, and three outreach angles (V1/V2/V3). Writes a local Markdown file. Read-only on social sources — never sends or posts anything.",
+      "description": "Build or refresh a structured Research Capsule for any sales prospect: background, workflow pain points, recent signals, and three outreach angles (V1/V2/V3). Writes a local Markdown file. Read-only on social sources \u2014 never sends or posts anything.",
       "version": "1.0.0",
       "license": "MIT",
       "category": "sales",
@@ -292,6 +292,75 @@
         "outreach",
         "crm",
         "lead"
+      ]
+    },
+    {
+      "name": "voice-assistant",
+      "source": {
+        "source": "github",
+        "repo": "Bubble-invest/audio-listener"
+      },
+      "description": "Always-on local voice assistant for your Claude Code agents \u2014 talk to your agent team out loud (whisper + local TTS, your own voice enrollment).",
+      "license": "MIT",
+      "category": "productivity",
+      "keywords": [
+        "voice",
+        "assistant",
+        "whisper",
+        "tts",
+        "speech",
+        "agents"
+      ]
+    },
+    {
+      "name": "bubble-ops-loop",
+      "source": {
+        "source": "github",
+        "repo": "Bubble-invest/bubble-ops-loop"
+      },
+      "description": "The agent framework / control plane \u2014 run a fleet of AI agents like a team (4-layer OODA loop, GitHub-Issues kanban control plane, gates, cockpit).",
+      "license": "MIT",
+      "category": "framework",
+      "keywords": [
+        "framework",
+        "multi-agent",
+        "orchestration",
+        "agents",
+        "control-plane"
+      ]
+    },
+    {
+      "name": "bubble-vps-platform",
+      "source": {
+        "source": "github",
+        "repo": "Bubble-invest/bubble-vps-platform"
+      },
+      "description": "Host your AI agent team on a VPS \u2014 TaaS deployment for the bubble-ops-loop framework.",
+      "license": "MIT",
+      "category": "framework",
+      "keywords": [
+        "vps",
+        "self-hosted",
+        "deployment",
+        "agents",
+        "taas"
+      ]
+    },
+    {
+      "name": "bubble-cabinet",
+      "source": {
+        "source": "github",
+        "repo": "Bubble-invest/bubble-cabinet"
+      },
+      "description": "Self-host your agent team fully local \u2014 on-prem Docker deployment of the bubble-ops-loop framework.",
+      "license": "MIT",
+      "category": "framework",
+      "keywords": [
+        "docker",
+        "on-premise",
+        "self-hosted",
+        "local",
+        "agents"
       ]
     }
   ]
