@@ -5,7 +5,7 @@
     "email": "contact@bubbleinvest.org"
   },
   "metadata": {
-    "description": "Free, open-source Claude Code skills and plugins by Bubble Invest — the Bubble shop for agentic workflows.",
+    "description": "Free, open-source Claude Code skills and plugins by Bubble Invest \u2014 the Bubble shop for agentic workflows.",
     "version": "2.0.0"
   },
   "plugins": [
@@ -98,7 +98,7 @@
     {
       "name": "voice-transcribe",
       "source": "./voice-transcribe",
-      "description": "Transcribe voice notes / audio files to text locally and offline (whisper.cpp, no API key) — Telegram .oga, wav, mp3, flac. FR/EN/auto.",
+      "description": "Transcribe voice notes / audio files to text locally and offline (whisper.cpp, no API key) \u2014 Telegram .oga, wav, mp3, flac. FR/EN/auto.",
       "license": "MIT",
       "category": "media",
       "keywords": [
@@ -227,7 +227,10 @@
     },
     {
       "name": "local-tts",
-      "source": "vdk888/local-tts",
+      "source": {
+        "source": "github",
+        "repo": "vdk888/local-tts"
+      },
       "description": "Local text-to-speech (VoxCPM2, 30 languages, voice cloning). Free, offline, Apple Silicon.",
       "license": "Apache-2.0",
       "category": "media",
@@ -241,8 +244,11 @@
     },
     {
       "name": "boycott-filter",
-      "source": "vdk888/boycott-filter",
-      "description": "Personal boycott enforcer — tell your agent which brands to avoid; a Chrome extension warns you on their pages with your own reasons.",
+      "source": {
+        "source": "github",
+        "repo": "vdk888/boycott-filter"
+      },
+      "description": "Personal boycott enforcer \u2014 tell your agent which brands to avoid; a Chrome extension warns you on their pages with your own reasons.",
       "license": "MIT",
       "category": "productivity",
       "keywords": [
@@ -255,7 +261,10 @@
     },
     {
       "name": "bubble-shield",
-      "source": "vdk888/bubble-shield-public",
+      "source": {
+        "source": "github",
+        "repo": "vdk888/bubble-shield-public"
+      },
       "description": "PreToolUse guard that blocks reads of protected client folders until data is anonymised through Bubble Shield. 100% local, reversible, fail-closed (GDPR/RGPD art. 25 & 32).",
       "license": "MIT",
       "category": "security",
