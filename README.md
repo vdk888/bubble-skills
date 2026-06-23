@@ -69,16 +69,12 @@ That's it. Every skill and plugin below becomes available in your Claude Code ag
 |-------|--------------|
 | **bubble-shield** | PreToolUse guard that blocks reads of protected client folders until data is anonymised. 100% local, fail-closed (GDPR art. 25 & 32). → [vdk888/bubble-shield-public](https://github.com/vdk888/bubble-shield-public) |
 
-## Coming at launch
+## Coming soon (fast-follow)
 
-These tools are in active development internally. We'll open them up as part of a coordinated release:
+A couple more are still in active development; we'll add them shortly:
 
-- **audio-listener** — always-on voice assistant that wakes on a keyword, executes agent tasks, replies via TTS. (Bubble-invest/audio-listener)
-- **bubble-ops-loop** — the agentic operating loop powering our family office: board triage, dept-manager dispatch, wiki compile, cron health. (Bubble-invest/bubble-ops-loop)
-- **bubble-vps-platform** — VPS provisioning + hardening framework for self-hosted agent infrastructure. (Bubble-invest/bubble-vps-platform)
-- **bubble-cabinet** — secure secrets and config management for multi-agent deployments. (Bubble-invest/bubble-cabinet)
 - **bubble-artist** — AI-native design agent for generative brand assets and visual content pipelines.
-- **ben-example-agent** — a fully-wired example of a domain dept-manager agent (investment desk) with live broker integrations.
+- **ben-example-agent** — a fully-wired example dept-manager agent. (Already shipping inside `bubble-ops-loop/agents/ben` — clone the framework to use it today.)
 
 ## More Bubble marketplaces
 
