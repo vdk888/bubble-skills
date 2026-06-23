@@ -50,6 +50,12 @@ That's it. Every skill and plugin below becomes available in your Claude Code ag
 | **publish-substack-note** | Publish a short-form Substack Note (image-first) via the Claude-in-Chrome extension. |
 | **publish-substack-post** | Publish or schedule a long-form Substack Post (inline images, hero, subscribe button) via Playwright — the selectors + timing that actually work. |
 
+### Sales
+
+| Skill | What it does |
+|-------|--------------|
+| **prospect-research** | Build or refresh a Research Capsule for any prospect: background, workflow pain, recent signals, and three outreach angles (V1/V2/V3). Writes a local Markdown file. Read-only — never sends or posts. |
+
 ### Research & Investing
 
 | Skill | What it does |
