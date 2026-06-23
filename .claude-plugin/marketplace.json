@@ -277,6 +277,22 @@
         "hook",
         "privacy"
       ]
+    },
+    {
+      "name": "prospect-research",
+      "source": "./prospect-research",
+      "description": "Build or refresh a structured Research Capsule for any sales prospect: background, workflow pain points, recent signals, and three outreach angles (V1/V2/V3). Writes a local Markdown file. Read-only on social sources — never sends or posts anything.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "sales",
+      "keywords": [
+        "sales",
+        "prospect",
+        "research",
+        "outreach",
+        "crm",
+        "lead"
+      ]
     }
   ]
 }
