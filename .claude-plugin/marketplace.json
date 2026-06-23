@@ -125,6 +125,120 @@
       ]
     },
     {
+      "name": "longform-video",
+      "source": "./longform-video",
+      "description": "Turn an article into a 1-5 min narrated landscape video essay: Remotion + local TTS voice cloning + Pexels b-roll + kinetic typography. Fully local voice, no cloud TTS.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "media",
+      "keywords": [
+        "video",
+        "remotion",
+        "tts",
+        "broll",
+        "explainer"
+      ]
+    },
+    {
+      "name": "deepseek-brain",
+      "source": "./deepseek-brain",
+      "description": "Switch a Claude Code agent's LLM backend from Anthropic to DeepSeek while keeping the full harness. Covers the reasoning-effort proxy, model routing, channels fix, and rollback.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "automation",
+      "keywords": [
+        "deepseek",
+        "llm",
+        "proxy",
+        "backend",
+        "claude-code"
+      ]
+    },
+    {
+      "name": "fund-source-verification",
+      "source": "./fund-source-verification",
+      "description": "Source-tier classification + independent-verification rubric for any external signal before you act on it. Tier gating, corroboration math, paywall discipline.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "research",
+      "keywords": [
+        "research",
+        "verification",
+        "sources",
+        "fact-check"
+      ]
+    },
+    {
+      "name": "fund-thesis-format",
+      "source": "./fund-thesis-format",
+      "description": "A canonical 7-part investment thesis structure (claim, mechanism, fit, invalidation, sizing, asymmetry, conviction levers) that renders at three depths: reference file, memo, chat.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "research",
+      "keywords": [
+        "investing",
+        "thesis",
+        "structure",
+        "writing"
+      ]
+    },
+    {
+      "name": "cron-preflight",
+      "source": "./cron-preflight",
+      "description": "Pre-flight scaffolding for scheduled tasks: catch-up SKEW math (machine slept through the window), policy-doc hash gate, source verifier. Abort / soft-mute / weekly-abort modes.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "automation",
+      "keywords": [
+        "cron",
+        "scheduled-tasks",
+        "preflight",
+        "guard"
+      ]
+    },
+    {
+      "name": "cron-postflight",
+      "source": "./cron-postflight",
+      "description": "Post-flight scaffolding for scheduled tasks: audit-log row, git commit + push with lane discipline, notification send. Companion to cron-preflight.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "automation",
+      "keywords": [
+        "cron",
+        "scheduled-tasks",
+        "postflight",
+        "audit"
+      ]
+    },
+    {
+      "name": "publish-substack-note",
+      "source": "./publish-substack-note",
+      "description": "Publish a short-form Substack Note with an optional hero image via the Claude-in-Chrome extension (Playwright gets 403 on Substack).",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "content",
+      "keywords": [
+        "substack",
+        "publishing",
+        "content",
+        "automation"
+      ]
+    },
+    {
+      "name": "publish-substack-post",
+      "source": "./publish-substack-post",
+      "description": "Publish or schedule a long-form Substack Post with inline images, hero image, and subscribe button, via a logged-in Playwright browser profile. Selectors + timing that actually work.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "category": "content",
+      "keywords": [
+        "substack",
+        "publishing",
+        "playwright",
+        "scheduling"
+      ]
+    },
+    {
       "name": "boycott-filter",
       "source": "vdk888/boycott-filter",
       "description": "Tell your agent which brands to avoid; a Chrome extension warns you on their pages with your own reasons.",
