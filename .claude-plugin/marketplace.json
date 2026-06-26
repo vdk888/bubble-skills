@@ -170,23 +170,9 @@
       ]
     },
     {
-      "name": "cron-preflight",
-      "source": "./cron-preflight",
-      "description": "Pre-flight scaffolding for scheduled tasks: catch-up SKEW math (machine slept through the window), policy-doc hash gate, source verifier. Abort / soft-mute / weekly-abort modes.",
-      "version": "1.0.0",
-      "license": "MIT",
-      "category": "automation",
-      "keywords": [
-        "cron",
-        "scheduled-tasks",
-        "preflight",
-        "guard"
-      ]
-    },
-    {
       "name": "cron-postflight",
       "source": "./cron-postflight",
-      "description": "Post-flight scaffolding for scheduled tasks: audit-log row, git commit + push with lane discipline, notification send. Companion to cron-preflight.",
+      "description": "Post-flight scaffolding for scheduled tasks: audit-log row, git commit + push with lane discipline, notification send.",
       "version": "1.0.0",
       "license": "MIT",
       "category": "automation",
