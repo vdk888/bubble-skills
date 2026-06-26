@@ -1,6 +1,6 @@
 ---
 name: cron-postflight
-description: Cron-fire post-flight scaffolding. Audit-log INSERT, git commit + push, notification send. Replaces inline wrap-up boilerplate across scheduled tasks. Companion to cron-preflight.
+description: Cron-fire post-flight scaffolding. Audit-log INSERT, git commit + push, notification send. Replaces inline wrap-up boilerplate across scheduled tasks.
 version: 1.0.0
 author: Bubble Invest
 license: MIT
@@ -16,7 +16,7 @@ Every scheduled task tends to end with the same 3 chores:
 2. Commit + push any repo state mutated this run
 3. Send a notification with the run summary
 
-This skill provides parametric helpers for all three. Companion to `cron-preflight` (which handles the start of the run).
+This skill provides parametric helpers for all three.
 
 > Notification routing comes from env vars so this skill ships clean. Set
 > `OPERATOR_CHAT_ID` and a token file path before using Block 3.
