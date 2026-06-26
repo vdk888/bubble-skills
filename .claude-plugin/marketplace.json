@@ -348,6 +348,24 @@
         "local",
         "agents"
       ]
+    },
+    {
+      "name": "live-surtitles",
+      "source": {
+        "source": "github",
+        "repo": "vdk888/live-surtitles"
+      },
+      "description": "Self-hosted real-time surtitle system for live theater \u2014 shows translated/transcribed subtitles to an audience in sync with the live performance (audio-follow). Upload a plain-text script; it segments and optionally translates.",
+      "license": "MIT",
+      "category": "media",
+      "keywords": [
+        "theater",
+        "surtitles",
+        "subtitles",
+        "live",
+        "translation",
+        "performance"
+      ]
     }
   ]
 }
