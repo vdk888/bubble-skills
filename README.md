@@ -24,6 +24,7 @@ That's it. Every skill and plugin below becomes available in your Claude Code ag
 | **voice-transcribe** | Transcribe voice notes / audio to text locally & offline (whisper.cpp, no API key). |
 | **suno-extract** | Extract the MP3 from any Suno song URL. No key needed. |
 | **longform-video** | Turn an article into a 1–5 min narrated landscape video essay: Remotion + local TTS voice cloning + Pexels b-roll + kinetic typography. |
+| **live-surtitles** | Self-hosted real-time surtitle system for live theater — translated/transcribed subtitles synced to the live performance (audio-follow). Upload a plain-text script. → [vdk888/live-surtitles](https://github.com/vdk888/live-surtitles) |
 
 ### Automation & Cron
 
