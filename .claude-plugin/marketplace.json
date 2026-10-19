@@ -39,20 +39,6 @@
       ]
     },
     {
-      "name": "scheduled-task-creation",
-      "source": "./scheduled-task-creation",
-      "description": "Step-by-step guide for creating and debugging Claude Desktop scheduled tasks (local routines).",
-      "version": "1.0.0",
-      "license": "MIT",
-      "category": "automation",
-      "keywords": [
-        "scheduled-tasks",
-        "cron",
-        "claude-desktop",
-        "routines"
-      ]
-    },
-    {
       "name": "notion-linker",
       "source": "./notion-linker",
       "description": "Automatically link published content (articles, posts) back to project rows in a Notion database.",
