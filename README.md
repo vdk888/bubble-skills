@@ -31,7 +31,6 @@ That's it. Every skill and plugin below becomes available in your Claude Code ag
 | Skill | What it does |
 |-------|--------------|
 | **telegram-reporter** | Send Telegram messages from any script or cron via curl. |
-| **scheduled-task-creation** | Guide for creating and debugging Claude Desktop scheduled tasks. |
 | **cron-postflight** | Post-flight scaffolding: audit-log row, git commit + push with lane discipline, notification send. |
 | **deepseek-brain** | Run Claude Code on DeepSeek instead of Anthropic, keeping the full harness. |
 
