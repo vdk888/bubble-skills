@@ -86,7 +86,7 @@
       "name": "longform-video",
       "source": "./longform-video",
       "description": "Turn an article into a 1-5 min narrated landscape video essay: Remotion + local TTS voice cloning + Pexels b-roll + kinetic typography. Fully local voice, no cloud TTS.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "license": "MIT",
       "category": "media",
       "keywords": [
