@@ -13,6 +13,26 @@ allowed-tools:
 
 Standard Telegram delivery for cron jobs. DO NOT use MCP telegram tools in crons — use curl.
 
+## Setup (one time)
+
+1. Create a bot with Telegram's [@BotFather](https://t.me/BotFather) (`/newbot`) and copy its token.
+2. Send any message to your bot, then read your chat ID from
+   `https://api.telegram.org/bot<TOKEN>/getUpdates` (`"chat":{"id":...}`).
+3. Save the token in a file named after a channel of your choice (here `alerts`), readable only by you:
+
+```bash
+mkdir -p ~/.config/telegram
+printf '%s' 'YOUR_BOT_TOKEN' > ~/.config/telegram/bot_token_alerts
+chmod 600 ~/.config/telegram/bot_token_alerts
+```
+
+The commands below expect `CHANNEL` (e.g. `alerts`), `TARGET_CHAT_ID` and `MESSAGE` to be set.
+Check the config before sending:
+
+```bash
+[ -s ~/.config/telegram/bot_token_$CHANNEL ] || echo "Missing ~/.config/telegram/bot_token_$CHANNEL (see Setup)"
+```
+
 ## Send to one channel
 
 ```bash
@@ -36,7 +56,9 @@ done
 
 ## Channel → Token mapping
 
-| Agent | Token file | Chat targets |
+One token file per channel; the names are yours to choose. Example with three channels:
+
+| Channel | Token file | Chat targets |
 |-------|-----------|--------------|
 | socials | bot_token_socials | your configured chat(s) |
 | security | bot_token_security | your configured chat(s) |
