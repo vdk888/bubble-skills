@@ -2,7 +2,7 @@
 
 Free, open-source [Claude Code](https://claude.com/claude-code) skills and plugins by [Bubble Invest](https://bubbleinvest.org).
 
-We're not developers — we built and use these tools to run our own family office. They're free, MIT. We'd love the community's help to improve them.
+We're not developers — we built and use these tools to run our own firm. They're free, MIT. We'd love the community's help to improve them.
 
 ## One-command install
 
@@ -19,19 +19,17 @@ That's it. Every skill and plugin below becomes available in your Claude Code ag
 
 | Skill | What it does |
 |-------|--------------|
-| **generate-image** | Generate images locally with FLUX.2 Klein (Apple Silicon). Free, offline, no API. |
-| **local-tts** | Local text-to-speech: 30 languages, voice cloning, VoxCPM2. Free, offline. → [vdk888/local-tts](https://github.com/vdk888/local-tts) |
+| **generate-image** | Generate images locally with FLUX.2 Klein, on an Apple Silicon Mac. Free, offline, no API. |
+| **local-tts** | Local text-to-speech: 30 languages, VoxCPM2, cloning your own voice or that of someone who consents. Free, offline. → [vdk888/local-tts](https://github.com/vdk888/local-tts) |
 | **voice-transcribe** | Transcribe voice notes / audio to text locally & offline (whisper.cpp, no API key). |
 | **suno-extract** | Extract the MP3 from any Suno song URL. No key needed. |
 | **longform-video** | Turn an article into a 1–5 min narrated landscape video essay: Remotion + local TTS voice cloning + Pexels b-roll + kinetic typography. |
-| **live-surtitles** | Self-hosted real-time surtitle system for live theater — translated/transcribed subtitles synced to the live performance (audio-follow). Upload a plain-text script. → [vdk888/live-surtitles](https://github.com/vdk888/live-surtitles) |
 
 ### Automation & Cron
 
 | Skill | What it does |
 |-------|--------------|
 | **telegram-reporter** | Send Telegram messages from any script or cron via curl. |
-| **cron-postflight** | Post-flight scaffolding: audit-log row, git commit + push with lane discipline, notification send. |
 | **deepseek-brain** | Run Claude Code on DeepSeek instead of Anthropic, keeping the full harness. |
 
 ### Productivity
@@ -40,7 +38,6 @@ That's it. Every skill and plugin below becomes available in your Claude Code ag
 |-------|--------------|
 | **notion-linker** | Auto-link published content back to project rows in a Notion database. |
 | **notion-reader** | Query a Notion database or page from any script. |
-| **boycott-filter** | Brand-boycott enforcer + Chrome extension. → [vdk888/boycott-filter](https://github.com/vdk888/boycott-filter) |
 
 ### Content
 
