@@ -156,20 +156,6 @@
       ]
     },
     {
-      "name": "cron-postflight",
-      "source": "./cron-postflight",
-      "description": "Post-flight scaffolding for scheduled tasks: audit-log row, git commit + push with lane discipline, notification send.",
-      "version": "1.0.0",
-      "license": "MIT",
-      "category": "automation",
-      "keywords": [
-        "cron",
-        "scheduled-tasks",
-        "postflight",
-        "audit"
-      ]
-    },
-    {
       "name": "publish-substack-note",
       "source": "./publish-substack-note",
       "description": "Publish a short-form Substack Note with an optional hero image via the Claude-in-Chrome extension (Playwright gets 403 on Substack).",
@@ -215,23 +201,6 @@
       ]
     },
     {
-      "name": "boycott-filter",
-      "source": {
-        "source": "github",
-        "repo": "vdk888/boycott-filter"
-      },
-      "description": "Personal boycott enforcer \u2014 tell your agent which brands to avoid; a Chrome extension warns you on their pages with your own reasons.",
-      "license": "MIT",
-      "category": "productivity",
-      "keywords": [
-        "boycott",
-        "ethics",
-        "chrome-extension",
-        "shopping",
-        "consumer"
-      ]
-    },
-    {
       "name": "prospect-research",
       "source": "./prospect-research",
       "description": "Build or refresh a structured Research Capsule for any sales prospect: background, workflow pain points, recent signals, and three outreach angles (V1/V2/V3). Writes a local Markdown file. Read-only on social sources \u2014 never sends or posts anything.",
@@ -245,24 +214,6 @@
         "outreach",
         "crm",
         "lead"
-      ]
-    },
-    {
-      "name": "live-surtitles",
-      "source": {
-        "source": "github",
-        "repo": "vdk888/live-surtitles"
-      },
-      "description": "Self-hosted real-time surtitle system for live theater \u2014 shows translated/transcribed subtitles to an audience in sync with the live performance (audio-follow). Upload a plain-text script; it segments and optionally translates.",
-      "license": "MIT",
-      "category": "media",
-      "keywords": [
-        "theater",
-        "surtitles",
-        "subtitles",
-        "live",
-        "translation",
-        "performance"
       ]
     }
   ]
