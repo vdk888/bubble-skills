@@ -55,7 +55,7 @@
     {
       "name": "generate-image",
       "source": "./generate-image",
-      "description": "Generate images locally with FLUX.2 Klein via mflux on Apple Silicon. Free, offline, no API calls.",
+      "description": "Generate images locally with FLUX.2 Klein via mflux, on an Apple Silicon Mac. Free, offline, no API calls.",
       "license": "Apache-2.0",
       "category": "media",
       "keywords": [
@@ -189,7 +189,7 @@
         "source": "github",
         "repo": "vdk888/local-tts"
       },
-      "description": "Local text-to-speech (VoxCPM2, 30 languages, voice cloning). Free, offline, Apple Silicon.",
+      "description": "Local text-to-speech (VoxCPM2, 30 languages, cloning your own voice or that of someone who consents). Free, offline, Apple Silicon.",
       "license": "Apache-2.0",
       "category": "media",
       "keywords": [
