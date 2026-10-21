@@ -1,12 +1,14 @@
 ---
-name: fund-source-verification
-description: Source-tier classification + independent-verification rubric for any external signal (news, Substack, paywalled wires, sentiment trackers). Load whenever you're about to act on a third-party claim or write "<outlet> reports X" in a memo.
+name: source-verification
+description: Source-tier classification + independent-verification rubric for any external signal (news, Substack, paywalled wires, sentiment trackers). Load whenever you're about to act on a third-party claim or write "<outlet> reports X" in a memo. Not investment advice.
 version: 1.0.0
 author: Bubble Invest
 license: MIT
 ---
 
-# Fund source verification — tier discipline + corroboration rubric
+# Source verification — tier discipline + corroboration rubric
+
+> **Not investment advice.** This skill is a method for checking a source before you rely on it. It recommends no investment.
 
 Operating principle: **the source is a HYPOTHESIS, not an answer.** Cross-source independent verification is THE workflow, not a polish step.
 

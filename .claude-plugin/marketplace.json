@@ -128,9 +128,9 @@
       ]
     },
     {
-      "name": "fund-source-verification",
-      "source": "./fund-source-verification",
-      "description": "Source-tier classification + independent-verification rubric for any external signal before you act on it. Tier gating, corroboration math, paywall discipline.",
+      "name": "source-verification",
+      "source": "./source-verification",
+      "description": "Source-tier classification + independent-verification rubric for any external signal before you act on it. Tier gating, corroboration math, paywall discipline. Not investment advice.",
       "version": "1.0.0",
       "license": "MIT",
       "category": "research",
@@ -142,9 +142,9 @@
       ]
     },
     {
-      "name": "fund-thesis-format",
-      "source": "./fund-thesis-format",
-      "description": "A canonical 7-part investment thesis structure (claim, mechanism, fit, invalidation, sizing, asymmetry, conviction levers) that renders at three depths: reference file, memo, chat.",
+      "name": "thesis-format",
+      "source": "./thesis-format",
+      "description": "A canonical 7-part investment thesis structure (claim, mechanism, fit, invalidation, sizing, asymmetry, conviction levers) that renders at three depths: reference file, memo, chat. Not investment advice.",
       "version": "1.0.0",
       "license": "MIT",
       "category": "research",

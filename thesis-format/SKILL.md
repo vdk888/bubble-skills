@@ -1,6 +1,6 @@
 ---
-name: fund-thesis-format
-description: Canonical 7-part investment thesis structure. Use whenever you write a position note, proposal memo, decision-reasoning row, idea-scout idea, theme note, or chat brief naming a specific bet. Every new thesis MUST follow this skeleton.
+name: thesis-format
+description: Canonical 7-part investment thesis structure. Use whenever you write a position note, proposal memo, decision-reasoning row, idea-scout idea, theme note, or chat brief naming a specific bet. Every new thesis MUST follow this skeleton. Not investment advice.
 version: 1.0.0
 author: Bubble Invest
 license: MIT
@@ -10,7 +10,9 @@ allowed-tools:
   - Write
 ---
 
-# fund-thesis-format — the 7-part structure
+# thesis-format — the 7-part structure
+
+> **Not investment advice.** This skill is a method for structuring your own research and reasoning. It recommends no investment, and nothing it produces is personalised advice.
 
 This is a single source of truth for HOW to articulate an investment bet. Every new thesis MUST conform to this structure. The structure renders at three depths — a reference file, a proposal memo, a chat/phone render — using the same skeleton, just at different densities.
 
