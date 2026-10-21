@@ -62,12 +62,6 @@ That's it. Every skill and plugin below becomes available in your Claude Code ag
 | **fund-source-verification** | Source-tier + independent-verification rubric before you act on any third-party claim. Tier gating, corroboration math, paywall discipline. |
 | **fund-thesis-format** | A 7-part investment-thesis structure (claim → mechanism → fit → invalidation → sizing → asymmetry → conviction levers) that renders as a file, a memo, or a chat message. |
 
-## Coming soon (fast-follow)
-
-One more is still in active development; we'll add it shortly:
-
-- **bubble-artist** — AI-native design agent for generative brand assets and visual content pipelines.
-
 ## License
 
 MIT — see [LICENSE](LICENSE). Use them, fork them, build on them.
