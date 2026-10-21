@@ -29,12 +29,14 @@ BIN="$ENGINE/build/bin/whisper-cli"
 MODEL="$ENGINE/models/ggml-small.bin"
 export LD_LIBRARY_PATH="$ENGINE/build/src:$ENGINE/build/ggml/src:${LD_LIBRARY_PATH:-}"
 
-WAV="$(mktemp "${TMPDIR:-/tmp}/vt-XXXXXX.wav")"
-trap 'rm -f "$WAV"' EXIT
-
+# whisper-cli reads WAV, MP3 and FLAC itself; only Ogg/Opus needs the Node decoder.
 case "$IN" in
-  *.wav) cp "$IN" "$WAV" ;;
-  *)     node "$SKILL_DIR/bin/oga2wav.mjs" "$IN" "$WAV" >&2 ;;
+  *.oga|*.ogg|*.opus)
+    WAV="$(mktemp "${TMPDIR:-/tmp}/vt-XXXXXX.wav")"
+    trap 'rm -f "$WAV"' EXIT
+    node "$SKILL_DIR/bin/oga2wav.mjs" "$IN" "$WAV" >&2
+    SRC="$WAV" ;;
+  *) SRC="$IN" ;;
 esac
 
-"$BIN" -m "$MODEL" -l "$LANG" -np -nt "$WAV" 2>/dev/null
+"$BIN" -m "$MODEL" -l "$LANG" -np -nt "$SRC" 2>/dev/null
