@@ -56,8 +56,8 @@ That's it. Every skill and plugin below becomes available in your Claude Code ag
 
 | Skill | What it does |
 |-------|--------------|
-| **fund-source-verification** | Source-tier + independent-verification rubric before you act on any third-party claim. Tier gating, corroboration math, paywall discipline. |
-| **fund-thesis-format** | A 7-part investment-thesis structure (claim → mechanism → fit → invalidation → sizing → asymmetry → conviction levers) that renders as a file, a memo, or a chat message. |
+| **source-verification** | Source-tier + independent-verification rubric before you act on any third-party claim. Tier gating, corroboration math, paywall discipline. Not investment advice. |
+| **thesis-format** | A 7-part investment-thesis structure (claim → mechanism → fit → invalidation → sizing → asymmetry → conviction levers) that renders as a file, a memo, or a chat message. Not investment advice. |
 
 ## License
 
