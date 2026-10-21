@@ -51,7 +51,7 @@ Verification:
 Corroborated: yes / partial / no
 ```
 
-When citing tier_c, ALWAYS pair with the tier_a signal that promoted it — e.g. "retail sentiment on URA bullish (tier_c) + uranium spot +8% WTD (Reuters Energy tier_a) + URA 20d RS vs SPY +4.3 ppts (calc)."
+When citing tier_c, ALWAYS pair with the tier_a signal that promoted it — e.g. "retail sentiment on EXMP bullish (tier_c) + underlying commodity spot +10% WTD (a tier_a wire) + EXMP 20d RS vs a broad index +4 ppts (calc)." (EXMP is an invented ticker.)
 
 ## Failure modes
 

@@ -36,11 +36,13 @@ A single declarative sentence stating the directional bet. No qualifiers ("poten
 Pattern: `[Buy / Sell / Hedge with] [INSTRUMENT] because [SPECIFIC OBSERVABLE WILL HAPPEN] over [HORIZON].`
 
 Examples (good):
-- "Buy XBI 2% NAV because equal-weight biotech captures the AI-drug-discovery premium that cap-weight IBB dilutes, over 6-18 months."
-- "Hedge with IBCI 1.4% NAV because Eurozone inflation will surprise upward as ECB lags AI-capex spillover, over 12-24 months."
+- "Buy EXBIO 2% NAV because equal-weight biotech captures the AI-drug-discovery premium that cap-weight EXCAP dilutes, over 6-18 months."
+- "Hedge with EXINF 1% NAV because inflation will surprise upward as the central bank lags AI-capex spillover, over 12-24 months."
+
+(All tickers and numbers in this skill are invented for illustration: EXBIO, EXCAP, EXINF, EXMP and their peers are not real instruments.)
 
 Examples (bad — rewrite):
-- "XBI looks attractive given biotech tailwinds." (No bet, no observable, no horizon.)
+- "EXBIO looks attractive given biotech tailwinds." (No bet, no observable, no horizon.)
 - "Add some infrastructure exposure for diversification." (Diversification is not a thesis.)
 
 ### 2. CAUSAL MECHANISM
@@ -48,13 +50,13 @@ The chain of cause-and-effect that connects the observable in §1 to the price m
 
 Format: numbered chain, 3-7 links. Each link names an actor or mechanism, not a vibe.
 
-Example (XBI):
-1. Big pharma (LLY/PFE/JNJ) facing patent cliffs 2026-2030 → must replenish pipeline
-2. AI-drug-discovery shortens preclinical timeline 4-7 years → 2-3 years
-3. Small/mid AI-native biotech (Recursion, Schrödinger) becomes M&A target
-4. Equal-weight XBI captures takeover premium across 200+ candidates
-5. Cap-weight IBB blunts effect (Amgen/Gilead = 25% of fund, no upside from M&A on themselves)
-6. → XBI outperforms IBB; you own the right vehicle for the structural pattern.
+Example (EXBIO):
+1. Large pharma companies facing patent cliffs → must replenish pipeline
+2. AI-drug-discovery shortens preclinical timeline from several years to a few
+3. Small/mid AI-native biotechs become M&A targets
+4. Equal-weight EXBIO captures takeover premium across many candidates
+5. Cap-weight EXCAP blunts effect (a few large acquirers = a large share of the fund, no upside from M&A on themselves)
+6. → EXBIO outperforms EXCAP; you own the right vehicle for the structural pattern.
 
 This forces "I believe X because Y because Z" articulation. No pattern-matching.
 
@@ -80,7 +82,7 @@ Must be:
 
 Three classes of trigger:
 - **HARD STOP** — full exit, no judgment call. Usually -20% from entry, or a specific structural break.
-- **THESIS KILL** — full exit because the underlying mechanism (§2) is broken. E.g., "AI-capex guidance reduced at META/GOOGL/MSFT" for an infra bet.
+- **THESIS KILL** — full exit because the underlying mechanism (§2) is broken. E.g., "AI-capex guidance reduced at the largest cloud providers" for an infra bet.
 - **TRIM TRIGGER** — partial exit (typically 50%) on heightened risk that doesn't fully break the thesis. E.g., "10Y rates spike >5.5% sustained" for a rate-sensitive bet.
 
 A thesis without numeric invalidation is faith, not investment.
@@ -99,7 +101,7 @@ Up-case vs down-case rough magnitudes. Without this, sizing is arbitrary.
 
 Format: `Up: +X% over <horizon> if <condition>. Down: -Y% over <horizon> if <condition>. Asymmetry ratio ≈ X:Y.`
 
-Example (XBI): "Up: +25-40% over 12-18m if AI-drug-discovery thesis manifests as accelerating M&A flow. Down: -15-20% if rates spike + biotech credit dries up. Asymmetry ≈ 1.5:1 to 2:1."
+Example (EXBIO): "Up: +30% over 12-18m if AI-drug-discovery thesis manifests as accelerating M&A flow. Down: -15% if rates spike + biotech credit dries up. Asymmetry ≈ 2:1."
 
 If asymmetry is less than 1:1, the thesis must explicitly frame as a HEDGE (i.e., you accept negative-EV in exchange for protection in a tail scenario). Don't pretend a hedge is a positive-EV bet.
 
@@ -115,7 +117,7 @@ Examples:
   - Cross-asset confirmation (e.g., bond market signals same regime)
 - Down-conviction (would prompt watch elevation, not full exit):
   - A single high-trust outlet refutes a key link in §2
-  - 3-month action diverges meaningfully from the comparable (e.g., XBI vs IBB)
+  - 3-month action diverges meaningfully from the comparable (e.g., EXBIO vs EXCAP)
   - Cross-asset divergence (e.g., AI capex narrative confirmed in equity but rejected in credit)
 
 ## Surface 1: REFERENCE FILE — the canonical implementation
@@ -126,18 +128,18 @@ YAML frontmatter — machine-queryable. Suggested fields:
 
 ```yaml
 ---
-ticker: INFR:xams
-weight_pct: 1.50
+ticker: EXMP
+weight_pct: 2.0
 conviction: 3
 view: hold
-opened_at: 2026-04-27T14:23:50Z
+opened_at: 2025-01-15T00:00:00Z
 
-thesis_slug: ai-data-center-power-broad
-claim: "Buy INFR 1.5% NAV because global infrastructure captures AI-data-center power demand more broadly than URA's narrow nuclear, over 12-24 months."
+thesis_slug: example-infra-broad
+claim: "Buy EXMP 2% NAV because a broad infrastructure basket captures AI-data-center power demand more broadly than the narrow nuclear fund EXNUC, over 12-24 months."
 size_class: starter
 horizon_weeks: 52
-diversifies: [ai_capex_narrow_nuclear, single-country-utility]
-duplicates: [partial: ex_us_equity (25% emerging weight)]
+diversifies: [narrow_nuclear, single-country-utility]
+duplicates: [partial: ex_us_equity]
 hedge_for: null  # null if directional bet; ticker/scenario name if hedge
 asymmetry:
   up_pct: 30
@@ -146,21 +148,19 @@ asymmetry:
   ratio: "2:1"
 invalidation_triggers:
   - type: hard_stop
-    rule: "INFR -20% from entry €33.755 = €27.00"
+    rule: "EXMP -20% from entry price"
   - type: thesis_kill
-    rule: "Hyperscaler 2027 capex guidance reduced (META/GOOGL/MSFT)"
+    rule: "Largest cloud providers cut next-year capex guidance"
   - type: trim_50
     rule: "10Y rates >5.5% sustained 5+ sessions"
   - type: structural_break
-    rule: "INFR breaks 200d MA (~€30 estimated)"
-correlations_at_entry:
-  SMH: 0.32
-  TLT: 0.30
-  SCHD: 0.41
-  MCHI: 0.30
-  SPY: 0.42
-upcase_levers: ["high-trust corroboration of AI-power thesis", "3m positive INFR-IGF tracking", "transmission cap-rate compression"]
-downcase_levers: ["single high-trust refutation of capex thesis", "3m INFR underperforms IGF >5ppts", "credit cracks not transmitting to equity"]
+    rule: "EXMP closes below its 200-day moving average"
+correlations_at_entry:  # illustrative round values
+  EXSEMI: 0.3
+  EXBOND: 0.3
+  EXWORLD: 0.4
+upcase_levers: ["high-trust corroboration of AI-power thesis", "3m EXMP tracks its peer EXPEER", "transmission cap-rate compression"]
+downcase_levers: ["single high-trust refutation of capex thesis", "3m EXMP underperforms EXPEER >5ppts", "credit cracks not transmitting to equity"]
 ---
 ```
 
@@ -175,12 +175,12 @@ A dated proposal memo (e.g. `YYYY-MM-DD-<slug>-proposal.md`) and the reasoning f
 The proposal memo opens with a 6-line summary block (machine-readable, human-skim-friendly):
 
 ```
-CLAIM:        Buy INFR 1.5% NAV because global infra captures AI-data-center power demand broadly, over 12-24m.
-SIZE:         €776 = $912 = 1.50% NAV (starter); upsize gate at 12 weeks if INFR-IGF tracks within 2ppts.
+CLAIM:        Buy EXMP 2% NAV because a broad infra basket captures AI-data-center power demand, over 12-24m.
+SIZE:         2% NAV (starter); upsize gate at 12 weeks if EXMP tracks its peer EXPEER within 2ppts.
 HORIZON:      12-18 months evaluation; multi-year hold if thesis confirms.
-CONVICTION:   3/5; would move to 4 if hyperscaler capex re-accelerates 2027.
+CONVICTION:   3/5; would move to 4 if cloud-provider capex re-accelerates next year.
 ASYMMETRY:    +30% / -15% over 18m (~2:1 up-skew).
-KILL:         Hyperscaler capex cuts (thesis-kill) · 10Y >5.5% 5+ sessions (trim-50) · 200d MA break (structural).
+KILL:         Cloud-provider capex cuts (thesis-kill) · 10Y >5.5% 5+ sessions (trim-50) · 200d MA break (structural).
 ```
 
 Then sections 1-7 in detail. Keep the memo ~600-1200 words; defer correlation tables and detailed math to the reference note.
@@ -194,10 +194,10 @@ The phone-friendly version. Use for: idea-scout TOP-N ideas, brief mentions of n
 Exact format (5 lines + 1 header line):
 
 ```
-🎯 INFR (1.50% NAV, conv 3/5, starter · 12-18m)
-CLAIM: Capture AI-data-center power demand broadly via global infra basket.
-WHY: 2030 +220% data-center power → utilities/transmission/grid pricing power. Not redundant w/ URA narrow-nuclear (corr SMH +0.32).
-KILL: Hyperscaler capex cuts · 10Y >5.5% 5+ sessions · 200d MA break.
+🎯 EXMP (2% NAV, conv 3/5, starter · 12-18m)
+CLAIM: Capture AI-data-center power demand broadly via a broad infra basket.
+WHY: Data-center power demand doubles → utilities/transmission/grid pricing power. Not redundant w/ EXNUC narrow-nuclear (corr EXSEMI +0.3).
+KILL: Cloud-provider capex cuts · 10Y >5.5% 5+ sessions · 200d MA break.
 ASYM: +30% / -15% over 18m (~2:1 up-skew).
 ```
 
