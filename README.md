@@ -62,24 +62,11 @@ That's it. Every skill and plugin below becomes available in your Claude Code ag
 | **fund-source-verification** | Source-tier + independent-verification rubric before you act on any third-party claim. Tier gating, corroboration math, paywall discipline. |
 | **fund-thesis-format** | A 7-part investment-thesis structure (claim → mechanism → fit → invalidation → sizing → asymmetry → conviction levers) that renders as a file, a memo, or a chat message. |
 
-### Security & Privacy
-
-| Skill | What it does |
-|-------|--------------|
-| **bubble-shield** | PreToolUse guard that blocks reads of protected client folders until data is anonymised. 100% local, fail-closed (GDPR art. 25 & 32). → [vdk888/bubble-shield-public](https://github.com/vdk888/bubble-shield-public) |
-
 ## Coming soon (fast-follow)
 
-A couple more are still in active development; we'll add them shortly:
+One more is still in active development; we'll add it shortly:
 
 - **bubble-artist** — AI-native design agent for generative brand assets and visual content pipelines.
-- **ben-example-agent** — a fully-wired example dept-manager agent. (Already shipping inside `bubble-ops-loop/agents/ben` — clone the framework to use it today.)
-
-## More Bubble marketplaces
-
-The following repos ship their own standalone marketplaces — add them independently if you want just those plugins:
-
-- `Bubble-invest/bubble-shield` — the internal (private) Bubble Shield marketplace (same plugin as above, internal versioning)
 
 ## License
 
