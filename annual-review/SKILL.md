@@ -14,12 +14,12 @@ allowed-tools:
 
 # annual-review — préparation des revues annuelles
 
-> **Draft only. Not investment advice. Elle prépare, vous validez.** The skill reads two columns of the firm's client file (client reference, last review date) and applies one stated rule. A wrong date in the file gives a wrong list, so the draft shows, for every client listed, the date it read and the rule it applied, and puts every missing or unreadable date in « À vérifier ». It never says the list is exhaustive, recommends nothing to the client, and sends nothing.
+> **Draft only. Not investment advice. L'outil prépare, vous validez.** The skill reads two columns of the firm's client file (client reference, last review date) and applies one stated rule. A wrong date in the file gives a wrong list, so the draft shows, for every client listed, the date it read and the rule it applied, and puts every missing or unreadable date in « À vérifier ». It never says the list is exhaustive, recommends nothing to the client, and sends nothing.
 
 ## What it does
 
 1. Reads the firm's client file, CSV (`;`, `,` or tab, UTF-8 or Windows encoding) or XLSX (read with the Python standard library, no extra package), and only two columns: the client reference and the last review date. Column names are configurable; other columns (names, addresses, amounts) are never read into the draft.
-2. Applies the rule with `bin/due_reviews.py`: a review is due when last review + 12 months (`--delai-mois` to change) falls in the month examined (default: the current month). Due in an earlier month = « en retard ». Empty, unreadable, two-digit-year or future dates, empty references and references on several lines go to « À vérifier », with the value read and the reason. Dates are read as `JJ/MM/AAAA` (French order), `AAAA-MM-JJ`, or Excel date cells.
+2. Applies the rule with `bin/due_reviews.py`: a review is due when last review + 12 months (`--delai-mois` to change) falls in the month examined (default: the current month). Due in an earlier month = « en retard ». Empty, unreadable, two-digit-year or future dates, empty references and references on several lines go to « À vérifier », with the value read and the reason. Dates are read as `JJ/MM/AAAA` (French order), `AAAA-MM-JJ`, or Excel date cells. An Excel number that gives a date before 1990 (for example a year typed as `2025`) is not taken as a date: it goes to « À vérifier ». An XLSX part larger than 50 MB once uncompressed (100 MB for all parts read), or one declaring a DOCTYPE, is refused with a message (export the sheet as CSV).
 3. Writes ONE local Markdown draft in French from `template.md`: the rule, the table of clients listed, the three lists, a proposed agenda, one invitation per client due or late, the limits, and a review checklist for the adviser.
 
 ## Rules (non-negotiable)

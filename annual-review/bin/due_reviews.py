@@ -8,11 +8,12 @@ Usage:
 
 Rule: a review is due when the last review date + N months (default 12) falls in
 the month examined (default: the current month). Due in an earlier month = late.
-A missing, unreadable, two-digit-year or future date goes to « À vérifier », with
-the value read. Prints, in French Markdown, the rule, the table of listed clients
+A missing, unreadable, two-digit-year or future date, or a number that gives a
+date before 1990, goes to « À vérifier », with the value read. Prints, in French Markdown, the rule, the table of listed clients
 and the lists; prints a count on stderr. Reads only the two configured columns.
 Exit 0 = ok, 2 = usage/IO error, 3 = column not found or file not readable as a table.
-Standard library only (XLSX read with zipfile + xml), no network.
+Standard library only (XLSX read with zipfile + xml), no network. XLSX parts are
+read with a size cap and refused if they declare a DOCTYPE (zip / entity bombs).
 """
 import calendar
 import csv
@@ -30,6 +31,9 @@ MOIS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août
 NS = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
       "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
       "p": "http://schemas.openxmlformats.org/package/2006/relationships"}
+PART_CAP = 50 * 1024 * 1024    # uncompressed bytes per XLSX part read
+TOTAL_CAP = 100 * 1024 * 1024  # uncompressed bytes for all parts read
+FIRST_YEAR = 1990              # an Excel number giving an earlier date is not taken as a date
 
 
 class TableError(Exception):
@@ -71,11 +75,30 @@ def col_index(ref):
     return n - 1
 
 
+class PartReader:
+    """Reads XLSX parts with a cap on uncompressed size (per part and in total)."""
+
+    def __init__(self, z):
+        self.z, self.total = z, 0
+
+    def xml(self, name):
+        with self.z.open(name) as f:
+            data = f.read(PART_CAP + 1)
+        self.total += len(data)
+        if len(data) > PART_CAP or self.total > TOTAL_CAP:
+            raise TableError(f"XLSX part {name} too large once uncompressed (cap {PART_CAP // 2**20} MB per part, "
+                             f"{TOTAL_CAP // 2**20} MB in total): not read, export the sheet as CSV")
+        if b"<!DOCTYPE" in data:
+            raise TableError(f"XLSX part {name} declares a DOCTYPE (not a normal Excel file): not read")
+        return ET.fromstring(data)
+
+
 def read_xlsx(path, sheet=None):
     try:
         z = zipfile.ZipFile(path)
-        wb = ET.fromstring(z.read("xl/workbook.xml"))
-        rels = ET.fromstring(z.read("xl/_rels/workbook.xml.rels"))
+        parts = PartReader(z)
+        wb = parts.xml("xl/workbook.xml")
+        rels = parts.xml("xl/_rels/workbook.xml.rels")
     except (zipfile.BadZipFile, KeyError, ET.ParseError) as e:
         raise TableError(f"not a readable XLSX file ({e})")
     pr = wb.find("m:workbookPr", NS)
@@ -95,12 +118,12 @@ def read_xlsx(path, sheet=None):
         raise TableError("sheet target not found")
     href = href.lstrip("/") if href.startswith("/") else "xl/" + href
     shared = []
-    if "xl/sharedStrings.xml" in z.namelist():
-        for si in ET.fromstring(z.read("xl/sharedStrings.xml")).findall("m:si", NS):
-            shared.append("".join(t.text or "" for t in si.iter(f"{{{NS['m']}}}t")))
     try:
-        ws = ET.fromstring(z.read(href))
-    except (KeyError, ET.ParseError) as e:
+        if "xl/sharedStrings.xml" in z.namelist():
+            for si in parts.xml("xl/sharedStrings.xml").findall("m:si", NS):
+                shared.append("".join(t.text or "" for t in si.iter(f"{{{NS['m']}}}t")))
+        ws = parts.xml(href)
+    except (KeyError, ET.ParseError, zipfile.BadZipFile) as e:
         raise TableError(f"sheet not readable ({e})")
     rows = []
     for row in ws.iter(f"{{{NS['m']}}}row"):
@@ -142,6 +165,8 @@ def parse_date(kind, value, date1904):
             return None, shown, "date illisible"
         base = dt.date(1904, 1, 1) if date1904 else dt.date(1899, 12, 30)
         d = base + dt.timedelta(days=int(serial))
+        if d.year < FIRST_YEAR:
+            return None, shown, f"nombre qui ne donne pas une date plausible (avant {FIRST_YEAR})"
         return d, f"{d.strftime('%d/%m/%Y')} (date Excel {value})", None
     if not value:
         return None, "", "date manquante"

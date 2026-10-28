@@ -66,6 +66,7 @@ expect "template passes structure" 0 "$D/template.md" --structure-only
 expect "unfilled template fails" 1 "$D/template.md"
 expect "missing file errors" 2 "$T/nope.md"
 mutate "missing banner fails" '1d'
+has "banner uses the approved wording" "L'outil prépare, vous validez." "$(head -1 "$E")$(head -1 "$D/template.md")"
 mutate "banner without 'Aucun envoi' fails" '1s/ Aucun envoi\.//'
 mutate "missing section fails" '/^## Revues en retard/d'
 mutate "rule not stated fails" 's/dernière revue + 12 mois tombe/date tombe/'
@@ -153,6 +154,42 @@ has "XLSX sheet named in the rule" "Fichier : c.xlsx, feuille « Clients »" "$o
 xlsx "$T/d.xlsx" 1 '[["Référence","Dernière revue"],["M1",44513]]'
 out="$(run --fichier "$T/d.xlsx" --feuille Clients 2>/dev/null)"
 has "XLSX 1904 date system" "- **M1** — date lue « 14/11/2025 (date Excel 44513) »" "$out"
+xlsx "$T/n.xlsx" 0 '[["Référence","Dernière revue"],["N1",2025],["N2",32874],["N3",32873]]'
+out="$(run --fichier "$T/n.xlsx" --feuille Clients 2>/dev/null)"
+has "XLSX plain number (2025) is à vérifier, not a 1905 date" "- **N1** — date lue « 2025 » ; nombre qui ne donne pas une date plausible (avant 1990)" "$out"
+if printf '%s\n' "$out" | grep -q '1905'; then ko "no 1905 date in the draft"; else ok "no 1905 date in the draft"; fi
+has "XLSX number giving 01/01/1990 is read as a date" "- **N2** — date lue « 01/01/1990 (date Excel 32874) »" "$out"
+has "XLSX number giving 31/12/1989 is à vérifier" "- **N3** — date lue « 32873 » ; nombre qui ne donne pas une date plausible" "$out"
+if printf '%s\n' "$out" | grep -A3 '^## Revues en retard' | grep -q 'N1'; then ko "plain number not listed late"; else ok "plain number not listed late"; fi
+# bomb FILE kind: big (one part over the per-part cap), total (three parts under it, over the total), entity (DOCTYPE)
+bomb() {
+  python3 -I - "$@" <<'PY2'
+import sys, zipfile
+out, kind = sys.argv[1], sys.argv[2]
+M = 'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"'
+pad = lambda mb: " " * (mb * 1024 * 1024)
+wb = f'<workbook {M} xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="S" sheetId="1" r:id="rId1"/></sheets>{pad(40) if kind == "total" else ""}</workbook>'
+sst = f'<sst {M}><si><t>Référence</t></si>{pad(40) if kind == "total" else ""}</sst>'
+big = "9" * (60 * 1024 * 1024) if kind == "big" else "45975"
+ws = f'<worksheet {M}><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2"><c r="A2"><v>{big}</v></c></row>{pad(40) if kind == "total" else ""}</sheetData></worksheet>'
+if kind == "entity":
+    ws = '<?xml version="1.0"?><!DOCTYPE w [<!ENTITY a "aaaaaaaaaa"><!ENTITY b "&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;">]>' + ws.replace("45975", "&b;")
+with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+    z.writestr("xl/workbook.xml", wb)
+    z.writestr("xl/_rels/workbook.xml.rels", '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Target="worksheets/sheet1.xml"/></Relationships>')
+    z.writestr("xl/sharedStrings.xml", sst)
+    z.writestr("xl/worksheets/sheet1.xml", ws)
+PY2
+}
+for k in big total entity; do
+  bomb "$T/b-$k.xlsx" "$k"
+  run --fichier "$T/b-$k.xlsx" --colonne-date Référence >"$T/bo" 2>"$T/be"; rc=$?
+  [ "$rc" = 3 ] && [ ! -s "$T/bo" ] && ok "XLSX $k bomb refused (exit 3, nothing printed)" || ko "XLSX $k bomb refused (rc $rc)"
+done
+[ "$(stat -f %z "$T/b-big.xlsx" 2>/dev/null || stat -c %s "$T/b-big.xlsx")" -lt 1000000 ] && ok "big bomb is a small file" || ko "big bomb is a small file"
+has "per-part cap message" "too large once uncompressed (cap 50 MB per part, 100 MB in total)" "$(run --fichier "$T/b-big.xlsx" 2>&1)"
+has "total cap message" "XLSX part xl/worksheets/sheet1.xml too large" "$(run --fichier "$T/b-total.xlsx" 2>&1)"
+has "DOCTYPE message" "declares a DOCTYPE" "$(run --fichier "$T/b-entity.xlsx" 2>&1)"
 python3 -I "$R" --fichier "$T/c.xlsx" --aujourdhui 2026-10-28 --mois 2026-11 >/dev/null 2>"$T/e3"; [ $? = 3 ] && ok "first sheet by default, missing column exit 3" || ko "first sheet by default, missing column exit 3"
 has "missing column lists the columns found" "columns: « notes »" "$(cat "$T/e3")"
 

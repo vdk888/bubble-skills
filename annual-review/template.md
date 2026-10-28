@@ -1,4 +1,4 @@
-> **BROUILLON — préparé par un assistant, à relire par le cabinet. Elle prépare, vous validez. Liste établie d'après les dates du fichier, à contrôler. Aucun envoi.**
+> **BROUILLON — préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Liste établie d'après les dates du fichier, à contrôler. Aucun envoi.**
 
 # Revues annuelles à préparer
 
