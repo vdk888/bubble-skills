@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fictional feed in the shape of https://www.amf-france.org/fr/flux-rss/display/21 (offline tests only). -->
+<rss version="2.0"><channel><title>Toutes les actualités et publications</title>
+<item><title>Exemple fictif : mise en garde</title><pubDate>Thu, 22 Oct 2026 10:22:58 +0200</pubDate><link>https://www.amf-france.org/fr/exemple-fictif/mise-en-garde#xts=1&amp;type=RSS</link></item>
+<item><title>Exemple fictif : doctrine</title><pubDate>Mon, 19 Oct 2026 09:00:00 +0200</pubDate><link>https://www.amf-france.org/fr/exemple-fictif/doctrine</link></item>
+<item><title>Exemple fictif : hors période</title><pubDate>Mon, 26 Oct 2026 11:31:06 +0100</pubDate><link>https://www.amf-france.org/fr/exemple-fictif/hors-periode</link></item>
+<item><title>Exemple fictif : lien externe</title><pubDate>Tue, 20 Oct 2026 09:00:00 +0200</pubDate><link>https://example.com/autre-site</link></item>
+<item><title>Exemple fictif : doublon</title><pubDate>Thu, 22 Oct 2026 10:22:58 +0200</pubDate><link>https://www.amf-france.org/fr/exemple-fictif/mise-en-garde</link></item>
+</channel></rss>
