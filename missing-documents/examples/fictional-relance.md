@@ -1,4 +1,4 @@
-> **BROUILLON — préparé par un assistant, à relire par le cabinet. Elle prépare, vous validez. Présence de fichiers seulement, pas leur contenu. Aucun envoi.**
+> **BROUILLON — préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Présence de fichiers seulement, pas leur contenu. Aucun envoi.**
 
 <!-- EXEMPLE FICTIF : dossier, liste et noms de fichiers inventés pour illustrer le format. -->
 

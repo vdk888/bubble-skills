@@ -14,7 +14,7 @@ allowed-tools:
 
 # missing-documents — pièces manquantes du dossier client
 
-> **Draft only. Elle prépare, vous validez.** The skill compares file NAMES with the firm's list. It does not open the files, does not check the client's identity, nor that a document is authentic, readable, signed or still valid, and it never replaces the firm's LCB-FT / KYC control. It never gives a verdict on the folder: no « complet », no « conforme », no « dossier validé ». It always shows the list of what was found, what is to check and what is missing.
+> **Draft only. L'outil prépare, vous validez.** The skill compares file NAMES with the firm's list. It does not open the files, does not check the client's identity, nor that a document is authentic, readable, signed or still valid, and it never replaces the firm's LCB-FT / KYC control. It never gives a verdict on the folder: no « complet », no « conforme », no « dossier validé ». It always shows the list of what was found, what is to check and what is missing.
 
 ## What it does
 
