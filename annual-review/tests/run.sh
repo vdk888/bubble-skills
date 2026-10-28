@@ -161,7 +161,9 @@ if printf '%s\n' "$out" | grep -q '1905'; then ko "no 1905 date in the draft"; e
 has "XLSX number giving 01/01/1990 is read as a date" "- **N2** — date lue « 01/01/1990 (date Excel 32874) »" "$out"
 has "XLSX number giving 31/12/1989 is à vérifier" "- **N3** — date lue « 32873 » ; nombre qui ne donne pas une date plausible" "$out"
 if printf '%s\n' "$out" | grep -A3 '^## Revues en retard' | grep -q 'N1'; then ko "plain number not listed late"; else ok "plain number not listed late"; fi
-# bomb FILE kind: big (one part over the per-part cap), total (three parts under it, over the total), entity (DOCTYPE)
+# bomb FILE kind: big (one part over the per-part cap), total (three parts under it, over the total), entity (DOCTYPE),
+# utf16 / utf16be (entity chain in a UTF-16 part, with and without BOM), latin1 (non-UTF-8 declaration, no DOCTYPE),
+# utf8decl (UTF-8 BOM and declaration: a normal file, read)
 bomb() {
   python3 -I - "$@" <<'PY2'
 import sys, zipfile
@@ -174,6 +176,15 @@ big = "9" * (60 * 1024 * 1024) if kind == "big" else "45975"
 ws = f'<worksheet {M}><sheetData><row r="1"><c r="A1" t="s"><v>0</v></c></row><row r="2"><c r="A2"><v>{big}</v></c></row>{pad(40) if kind == "total" else ""}</sheetData></worksheet>'
 if kind == "entity":
     ws = '<?xml version="1.0"?><!DOCTYPE w [<!ENTITY a "aaaaaaaaaa"><!ENTITY b "&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;">]>' + ws.replace("45975", "&b;")
+chain = '<!ENTITY e0 "aaaaaaaaaa">' + "".join(f'<!ENTITY e{i} "{f"&e{i - 1};" * 10}">' for i in range(1, 7))
+if kind == "utf16":
+    ws = ('<?xml version="1.0" encoding="UTF-16"?><!DOCTYPE w [' + chain + ']>' + ws.replace("45975", "&e6;")).encode("utf-16")
+if kind == "utf16be":
+    ws = ('<?xml version="1.0" encoding="UTF-16BE"?><!DOCTYPE w [' + chain + ']>' + ws.replace("45975", "&e6;")).encode("utf-16-be")
+if kind == "latin1":
+    ws = ('<?xml version="1.0" encoding="ISO-8859-1"?>' + ws).encode("latin-1")
+if kind == "utf8decl":
+    ws = '\ufeff<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + ws
 with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
     z.writestr("xl/workbook.xml", wb)
     z.writestr("xl/_rels/workbook.xml.rels", '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Target="worksheets/sheet1.xml"/></Relationships>')
@@ -181,7 +192,7 @@ with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
     z.writestr("xl/worksheets/sheet1.xml", ws)
 PY2
 }
-for k in big total entity; do
+for k in big total entity utf16 utf16be latin1; do
   bomb "$T/b-$k.xlsx" "$k"
   run --fichier "$T/b-$k.xlsx" --colonne-date Référence >"$T/bo" 2>"$T/be"; rc=$?
   [ "$rc" = 3 ] && [ ! -s "$T/bo" ] && ok "XLSX $k bomb refused (exit 3, nothing printed)" || ko "XLSX $k bomb refused (rc $rc)"
@@ -190,6 +201,11 @@ done
 has "per-part cap message" "too large once uncompressed (cap 50 MB per part, 100 MB in total)" "$(run --fichier "$T/b-big.xlsx" 2>&1)"
 has "total cap message" "XLSX part xl/worksheets/sheet1.xml too large" "$(run --fichier "$T/b-total.xlsx" 2>&1)"
 has "DOCTYPE message" "declares a DOCTYPE" "$(run --fichier "$T/b-entity.xlsx" 2>&1)"
+has "UTF-16 part refused as not UTF-8" "XLSX part xl/worksheets/sheet1.xml is not UTF-8" "$(run --fichier "$T/b-utf16.xlsx" 2>&1)"
+has "UTF-16BE part without BOM refused as not UTF-8" "is not UTF-8" "$(run --fichier "$T/b-utf16be.xlsx" 2>&1)"
+has "ISO-8859-1 declared part refused as not UTF-8" "is not UTF-8" "$(run --fichier "$T/b-latin1.xlsx" 2>&1)"
+bomb "$T/b-utf8decl.xlsx" utf8decl
+run --fichier "$T/b-utf8decl.xlsx" --colonne-date Référence >/dev/null 2>&1; [ $? = 0 ] && ok "UTF-8 BOM and declaration read normally" || ko "UTF-8 BOM and declaration read normally"
 python3 -I "$R" --fichier "$T/c.xlsx" --aujourdhui 2026-10-28 --mois 2026-11 >/dev/null 2>"$T/e3"; [ $? = 3 ] && ok "first sheet by default, missing column exit 3" || ko "first sheet by default, missing column exit 3"
 has "missing column lists the columns found" "columns: « notes »" "$(cat "$T/e3")"
 

@@ -13,7 +13,8 @@ date before 1990, goes to « À vérifier », with the value read. Prints, in Fr
 and the lists; prints a count on stderr. Reads only the two configured columns.
 Exit 0 = ok, 2 = usage/IO error, 3 = column not found or file not readable as a table.
 Standard library only (XLSX read with zipfile + xml), no network. XLSX parts are
-read with a size cap and refused if they declare a DOCTYPE (zip / entity bombs).
+read with a size cap and refused if not UTF-8 or if they declare a DOCTYPE
+(zip / entity bombs).
 """
 import calendar
 import csv
@@ -33,6 +34,7 @@ NS = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
       "p": "http://schemas.openxmlformats.org/package/2006/relationships"}
 PART_CAP = 50 * 1024 * 1024    # uncompressed bytes per XLSX part read
 TOTAL_CAP = 100 * 1024 * 1024  # uncompressed bytes for all parts read
+XML_DECL_ENCODING = re.compile(rb"(?:\xef\xbb\xbf)?\s*<\?xml[^>]*?encoding\s*=\s*[\"']([^\"']*)")
 FIRST_YEAR = 1990              # an Excel number giving an earlier date is not taken as a date
 
 
@@ -88,6 +90,12 @@ class PartReader:
         if len(data) > PART_CAP or self.total > TOTAL_CAP:
             raise TableError(f"XLSX part {name} too large once uncompressed (cap {PART_CAP // 2**20} MB per part, "
                              f"{TOTAL_CAP // 2**20} MB in total): not read, export the sheet as CSV")
+        # Excel writes UTF-8: refuse anything else first, so the DOCTYPE byte check cannot be dodged by
+        # another encoding (UTF-16/32 has a BOM or NUL bytes; any other one is named in the XML declaration).
+        decl = XML_DECL_ENCODING.match(data)
+        if (data.startswith((b"\xff\xfe", b"\xfe\xff")) or b"\x00" in data
+                or (decl and decl.group(1).lower() not in (b"utf-8", b"utf8"))):
+            raise TableError(f"XLSX part {name} is not UTF-8 (not a normal Excel file): not read")
         if b"<!DOCTYPE" in data:
             raise TableError(f"XLSX part {name} declares a DOCTYPE (not a normal Excel file): not read")
         return ET.fromstring(data)
