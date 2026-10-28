@@ -1,0 +1,11 @@
+# Liste des pièces du dossier client — point de départ, à copier et adapter par le cabinet.
+# Une pièce par ligne : « libellé : mot-clé, mot-clé, ... »
+# Un mot-clé correspond quand tous ses mots figurent dans le nom du fichier
+# (accents, majuscules, tirets et underscores ignorés).
+Pièce d'identité en cours de validité : cni, carte identite, passeport, titre sejour
+Justificatif de domicile de moins de 3 mois : justificatif domicile, facture, quittance
+RIB : rib
+Dernier avis d'imposition : avis imposition, impot
+Questionnaire de connaissance client signé : questionnaire, connaissance client, kyc
+Lettre de mission signée : lettre mission
+Justificatif d'origine des fonds : origine fonds
