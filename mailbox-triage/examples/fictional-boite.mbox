@@ -1,0 +1,179 @@
+From client.ex001@messagerie.example Mon Oct 26 09:12:00 2026
+From: Client fictif EX-001 <client.ex001@messagerie.example>
+To: Cabinet fictif <contact@cabinet-fictif.example>
+Subject: Demande de rendez-vous
+Date: Mon, 26 Oct 2026 09:12:00 +0100
+Message-ID: <fictif-01@messagerie.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Bonjour,
+
+Pourriez-vous me proposer un créneau la semaine prochaine pour faire le point sur ma situation ?
+
+Merci,
+EX-001
+
+From client.ex002@messagerie.example Tue Oct 27 18:40:00 2026
+From: Client fictif EX-002 <client.ex002@messagerie.example>
+To: Cabinet fictif <contact@cabinet-fictif.example>
+Subject: Rachat partiel sur mon contrat
+Date: Tue, 27 Oct 2026 18:40:00 +0100
+Message-ID: <fictif-02@messagerie.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Bonjour,
+
+Je souhaite faire un rachat partiel sur mon contrat d'assurance vie pour financer des travaux.
+Pouvez-vous me dire comment procéder ?
+
+Bien à vous,
+EX-002
+
+From client.ex003@messagerie.example Wed Oct 28 08:05:00 2026
+From: Client fictif EX-003 <client.ex003@messagerie.example>
+To: Cabinet fictif <contact@cabinet-fictif.example>
+Subject: Réclamation : frais prélevés sur mon relevé
+Date: Wed, 28 Oct 2026 08:05:00 +0100
+Message-ID: <fictif-03@messagerie.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Bonjour,
+
+Je constate des frais sur mon dernier relevé que je ne comprends pas. Je souhaite déposer une réclamation.
+
+Cordialement,
+EX-003
+
+From service.partenaires@assureur-fictif.example Wed Oct 28 11:30:00 2026
+From: Assureur fictif <service.partenaires@assureur-fictif.example>
+To: Cabinet fictif <contact@cabinet-fictif.example>
+Subject: Bordereau de commissions du troisième trimestre
+Date: Wed, 28 Oct 2026 11:30:00 +0100
+Message-ID: <fictif-04@messagerie.example>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="SEP"
+
+--SEP
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Bonjour,
+
+Vous trouverez ci-joint le bordereau du troisième trimestre. Merci de nous signaler tout écart.
+
+Le service partenaires
+
+--SEP
+Content-Type: application/pdf; name="bordereau-T3.pdf"
+Content-Disposition: attachment; filename="bordereau-T3.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQgZmljaGllciBmaWN0aWYsIG5lIGNvbnRpZW50IHJpZW4K
+--SEP--
+
+From lettre@plateforme-fictive.example Wed Oct 28 07:00:00 2026
+From: Plateforme fictive <lettre@plateforme-fictive.example>
+To: Cabinet fictif <contact@cabinet-fictif.example>
+Subject: La lettre de la plateforme, novembre 2026
+Date: Wed, 28 Oct 2026 07:00:00 +0100
+Message-ID: <fictif-05@messagerie.example>
+List-Unsubscribe: <https://plateforme-fictive.example/desinscription>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Les nouveautés de la plateforme ce mois-ci.
+Se désinscrire : https://plateforme-fictive.example/desinscription
+
+From cotisations@association-pro.example Thu Oct 29 08:15:00 2026
+From: Association professionnelle fictive <cotisations@association-pro.example>
+To: Cabinet fictif <contact@cabinet-fictif.example>
+Subject: Appel de cotisation 2027 à régler avant le 30/11/2026
+Date: Thu, 29 Oct 2026 08:15:00 +0100
+Message-ID: <fictif-06@messagerie.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Bonjour,
+
+Votre appel de cotisation 2027 est disponible dans votre espace adhérent. Merci de nous confirmer la bonne réception.
+
+L'association
+
+From service-clients@banque-fictive.example Thu Oct 29 08:47:00 2026
+From: Service clients <service-clients@banque-fictive.example>
+To: Cabinet fictif <contact@cabinet-fictif.example>
+Subject: Changement de RIB urgent
+Date: Thu, 29 Oct 2026 08:47:00 +0100
+Message-ID: <fictif-07@messagerie.example>
+Reply-To: paiements@autre-domaine.example
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Bonjour,
+
+Suite à un changement de banque, merci de mettre à jour nos coordonnées bancaires avec le nouveau RIB ci-dessous avant tout prochain paiement.
+
+From prospect.fictif@messagerie.example Thu Oct 29 09:02:00 2026
+From: Prospect fictif <prospect.fictif@messagerie.example>
+To: Cabinet fictif <contact@cabinet-fictif.example>
+Subject: Premier contact : rendez-vous ?
+Date: Thu, 29 Oct 2026 09:02:00 +0100
+Message-ID: <fictif-08@messagerie.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Bonjour,
+
+Un ami m'a parlé de votre cabinet. Seriez-vous disponible pour un premier rendez-vous en visio ?
+
+Merci d'avance
+
+From client.ex004@messagerie.example Thu Oct 29 09:20:00 2026
+From: Client fictif EX-004 <client.ex004@messagerie.example>
+To: Cabinet fictif <contact@cabinet-fictif.example>
+Subject: =?ISO-8859-1?Q?Pi=E8ces_demand=E9es?=
+Date: Thu, 29 Oct 2026 09:20:00 +0100
+Message-ID: <fictif-09@messagerie.example>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="SEP"
+
+--SEP
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
+
+Bonjour,
+
+Voici les pi�ces demand�es : mon avis d'imposition est en pi�ce jointe.
+
+EX-004
+
+--SEP
+Content-Type: application/pdf; name="avis-imposition.pdf"
+Content-Disposition: attachment; filename="avis-imposition.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQgZmljaGllciBmaWN0aWYsIG5lIGNvbnRpZW50IHJpZW4K
+--SEP--
+
+From noreply@plateforme-fictive.example Thu Oct 29 09:30:00 2026
+From: Plateforme fictive <noreply@plateforme-fictive.example>
+To: Cabinet fictif <contact@cabinet-fictif.example>
+Subject: Votre relevé de situation est disponible
+Date: Thu, 29 Oct 2026 09:30:00 +0100
+Message-ID: <fictif-10@messagerie.example>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Votre relevé est disponible dans votre espace. Ceci est un message automatique, merci de ne pas y répondre.
+
