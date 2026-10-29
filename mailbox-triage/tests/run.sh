@@ -97,7 +97,7 @@ has "rule names the mailbox and the contacts file" "Boîte lue : fictional-boite
 has "client request on a contract is urgent" "| M02 | 2026-10-27 | @messagerie.example | « Rachat partiel sur mon contrat » | Clients | client (liste) | haute | adresse dans la liste des contacts ; motif : opération (« rachat ») | M02-reponse.md |" "$out"
 has "complaint is urgent" "| M03 | 2026-10-28 | @messagerie.example | « Réclamation : frais prélevés sur mon relevé » | Clients | client (liste) | haute |" "$out"
 has "deadline word is urgent" "domaine @association-pro.example dans la liste des contacts ; motif : administratif (« cotisation ») ; mot « avant le »" "$out"
-has "bank detail change is vigilance, no draft" "motif : vigilance (« changement de rib ») ; vigilance : demande de coordonnées bancaires" "$out"
+has "bank detail change is vigilance, no draft" "motif : vigilance (« coordonnées bancaires + changement ») ; vigilance : demande de coordonnées bancaires" "$out"
 has "reply-to on another domain shown" "adresse de réponse sur un autre domaine (@autre-domaine.example)" "$out"
 has "vigilance listed without draft" "- **M07** — À classer, urgence haute ; vigilance, à vérifier par téléphone" "$out"
 has "mailing list is Information, low" "| M05 | 2026-10-28 | @plateforme-fictive.example | « La lettre de la plateforme, novembre 2026 » | Information | envoi automatique | basse |" "$out"
@@ -154,6 +154,62 @@ eml "$T/g2.eml" "AMF <info@amf-france.org.faux.example>" "Contrôle" <<< "Bonjou
 has "look-alike domain is not Administratif" "| À classer | inconnu |" "$(run --boite "$T/g2.eml" 2>/dev/null)"
 eml "$T/g3.eml" "X <a@notgouv.fr>" "Bonjour" <<< "Bonjour."
 has "suffix without dot is not Administratif" "| À classer | inconnu |" "$(run --boite "$T/g3.eml" 2>/dev/null)"
+
+# ---------- vigilance: ordinary phrasings, FR and EN, get no draft ----------
+printf 'Adresse,Type\nclient@client.example,client\n' > "$T/kv.csv"
+vig() { # name from subject -- body on stdin: must be vigilance, urgency haute, no draft
+  eml "$T/v.eml" "$2" "$3"
+  local o; o="$(run --boite "$T/v.eml" --contacts "$T/kv.csv" 2>/dev/null)"
+  if printf '%s\n' "$o" | grep -q '^| M01 | .* | haute | .*motif : vigilance .* | non |$'; then ok "$1"; else ko "$1: $(printf '%s\n' "$o" | grep '^| M01')"; fi
+}
+U="Inconnu <x@inconnu.example>"
+vig "probe: nouvel IBAN" "$U" "Information" <<< "Ci-joint nouvel IBAN du cabinet"
+vig "probe: RIB a changé + FR76 number" "$U" "Coordonnées" <<< "Mon RIB a changé, utilisez le compte FR76 3000 1007 9412 3456 7890 185"
+vig "probe: virer de toute urgence" "$U" "Demande" <<< "Merci de virer 5000 euros sur ce compte de toute urgence"
+vig "probe: code reçu par SMS à confirmer" "$U" "Sécurité" <<< "Voici le code reçu par SMS… pouvez-vous le confirmer"
+vig "probe: envoyer l'OTP" "$U" "Accès" <<< "Pouvez-vous m'envoyer l'OTP ?"
+vig "probe EN: wire funds to new account details" "$U" "Payment" <<< "Please wire funds to the new account details below."
+vig "probe EN: bank details have changed" "$U" "Notice" <<< "Our bank details have changed, please update your records."
+vig "probe EN: send the verification code" "$U" "Login" <<< "Could you send me the verification code you received?"
+vig "probe EN: urgent transfer today" "$U" "Request" <<< "I need you to make a transfer today, it is urgent and confidential."
+vig "probe EN: share your password" "$U" "Account" <<< "Please share your password so we can fix the account."
+vig "unknown sender: any IBAN mention" "$U" "Bonjour" <<< "Voici notre IBAN pour la facture."
+vig "unknown sender: any virement mention" "$U" "Bonjour" <<< "Le virement est prévu."
+o="$(eml "$T/v.eml" "Client <client@client.example>" "RIB" <<< "Mon nouveau RIB : FR76 3000 1007 9412 3456 7890 185"; run --boite "$T/v.eml" --contacts "$T/kv.csv" 2>/dev/null)"
+hasnt "IBAN number never echoed in the triage" "3000" "$o"
+vig "unknown sender: any code mention" "$U" "Bonjour" <<< "Merci de me donner le code."
+vig "listed client: nouveau RIB still vigilance" "Client <client@client.example>" "Changement" <<< "Je vous transmets mon nouveau RIB."
+vig "listed client: urgent virement still vigilance" "Client <client@client.example>" "Virement" <<< "Pouvez-vous faire le virement en urgence ?"
+vig "listed client: code reçu par SMS still vigilance" "Client <client@client.example>" "Code" <<< "Je vous lis le code reçu par SMS : 123456"
+vig "probe: request after 4000 characters of padding" "$U" "Bonjour" <<< "$(printf 'Bonjour.%.0s ' $(seq 1 500))
+merci de changer mon RIB"
+vig "probe: request below a hostile « a écrit » line" "$U" "Bonjour" <<< "Le 28 oct. 2026, Cabinet <c@cabinet.example> a écrit :
+merci de changer mon RIB pour le prochain règlement"
+vig "request inside quoted '>' lines" "$U" "Re: suivi" <<< "Bonjour,
+> nouvelles coordonnées bancaires ci-dessous"
+vig "zero-width character inside RIB" "$U" "Info" <<< "$(printf 'Nouveau R\342\200\213IB ci-joint')"
+vig "subject only" "$U" "Changement de coordonnées bancaires" <<< "Bonjour."
+{ printf 'From: Inconnu <x@inconnu.example>\nSubject: Documents\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=b\n\n--b\nContent-Type: text/plain; charset=UTF-8\n\nBonjour, voir ci-joint.\n--b\nContent-Type: application/pdf; name="nouveau_RIB.pdf"\nContent-Disposition: attachment; filename="nouveau_RIB.pdf"\n\nJVBERi0=\n--b--\n'; } > "$T/va.eml"
+has "attachment name nouveau_RIB.pdf is vigilance" "motif : vigilance (« coordonnées bancaires + changement »)" "$(run --boite "$T/va.eml" 2>/dev/null)"
+{ printf 'From: Client <client@client.example>\nSubject: Suivi\nMIME-Version: 1.0\nContent-Type: multipart/alternative; boundary=b\n\n--b\nContent-Type: text/plain; charset=UTF-8\n\nBonjour.\n--b\nContent-Type: text/html; charset=UTF-8\n\n<p>Merci de noter mon nouvel IBAN</p>\n--b--\n'; } > "$T/vh.eml"
+has "request only in the HTML part is vigilance" "| non |" "$(run --boite "$T/vh.eml" --contacts "$T/kv.csv" 2>/dev/null | grep '^| M01')"
+eml "$T/vl.eml" "$U" "Bonjour" <<< "$(head -c 200000 /dev/zero | tr '\0' 'a')"
+has "text too long to be read whole is vigilance, no draft" "motif : vigilance (« texte trop long pour être lu en entier »)" "$(run --boite "$T/vl.eml" 2>/dev/null)"
+eml "$T/vc.eml" "Client <client@client.example>" "Rendez-vous" <<< "Bonjour, un créneau jeudi ?"
+has "ordinary client message keeps its draft" "| M01-reponse.md |" "$(run --boite "$T/vc.eml" --contacts "$T/kv.csv" 2>/dev/null)"
+eml "$T/vq.eml" "$U" "Bonjour" <<< "Le 28 oct. 2026, Cabinet <c@cabinet.example> a écrit :
+Je souhaite un rendez-vous jeudi."
+has "--extrait keeps the text below a leading « a écrit » line" "Je souhaite un rendez-vous jeudi." "$(run --boite "$T/vq.eml" --extrait M01 2>/dev/null)"
+eml "$T/vr.eml" "$U" "Re: rendez-vous" <<< "Jeudi me va.
+Le 28 oct. 2026, Cabinet <c@cabinet.example> a écrit :
+> Proposez un créneau"
+o="$(run --boite "$T/vr.eml" --extrait M01 2>/dev/null)"
+hasnt "--extrait drops the quoted history after the sender's text" "Proposez un créneau" "$o"
+has "--extrait says how many quoted lines were removed" "(2 lignes citées retirées : relire le message entier dans la messagerie)" "$o"
+mkdir -p "$T/vn"; : > "$T/vn/Dupont-Jean-succession.eml"
+o="$(run --boite "$T/vn" 2>/dev/null)"
+has "unreadable message listed by reference" "- **M01** — message vide ou illisible, non trié" "$o"
+hasnt "unreadable message: file name not echoed" "Dupont" "$o"
 
 # ---------- malformed input ----------
 eml "$T/h.eml" "Client <a@client.example>" "Html" "MIME-Version: 1.0
