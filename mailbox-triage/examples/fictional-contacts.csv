@@ -1,0 +1,8 @@
+Adresse;Type;Note
+client.ex001@messagerie.example;client;Client fictif EX-001
+client.ex002@messagerie.example;client;Client fictif EX-002
+client.ex003@messagerie.example;client;Client fictif EX-003
+client.ex004@messagerie.example;client;Client fictif EX-004
+@assureur-fictif.example;partenaire;Assureur fictif
+@plateforme-fictive.example;partenaire;Plateforme fictive
+@association-pro.example;administratif;Association professionnelle fictive
