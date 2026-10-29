@@ -1,6 +1,6 @@
-> **BROUILLON DE RÉPONSE — préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Aucun envoi.**
+> **BROUILLON DE RÉPONSE : préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Aucun envoi.**
 
-- **Message :** M09 — reçu le 2026-10-29 — Clients, urgence normale
+- **Message :** M09, reçu le 2026-10-29 (Clients, urgence normale)
 - **Objet reçu :** « Pièces demandées »
 
 Objet : Re: Pièces demandées

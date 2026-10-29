@@ -1,6 +1,6 @@
-> **BROUILLON DE RÉPONSE — préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Aucun envoi.**
+> **BROUILLON DE RÉPONSE : préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Aucun envoi.**
 
-- **Message :** M03 — reçu le 2026-10-28 — Clients, urgence haute
+- **Message :** M03, reçu le 2026-10-28 (Clients, urgence haute)
 - **Objet reçu :** « Réclamation : frais prélevés sur mon relevé »
 
 Objet : Re: Réclamation : frais prélevés sur mon relevé

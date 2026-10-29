@@ -65,13 +65,13 @@ mutate "vigilance message with a draft fails" '/^| M07 |/s/| non |$/| M07-repons
 mutate "rule without the draft rule fails" 's/Brouillon de réponse seulement pour un expéditeur de la liste des contacts/Brouillon de réponse/'
 # unlisted sender with a draft, consistent everywhere else (table, list, draft file): only the new rule fails
 sed -e '/^| M08 |/s/| non |$/| M08-reponse.md |/' -e '/^- \*\*M08\*\*/d' \
-    -e '/^- \*\*M09\*\* — Clients, urgence normale ; brouillon M09-reponse.md/a\
-- **M08** — À classer, urgence normale ; brouillon M08-reponse.md' "$E" > "$T/u.md"
-rm -rf "$T/b"; cp -R "$B" "$T/b"; sed 's/\*\*Message :\*\* M01 — reçu le 2026-10-26 — Clients/**Message :** M08 — reçu le 2026-10-29 — À classer/' "$B/M01-reponse.md" > "$T/b/M08-reponse.md"
+    -e '/^- \*\*M09\*\* : Clients, urgence normale ; brouillon M09-reponse.md/a\
+- **M08** : À classer, urgence normale ; brouillon M08-reponse.md' "$E" > "$T/u.md"
+rm -rf "$T/b"; cp -R "$B" "$T/b"; sed 's/\*\*Message :\*\* M01, reçu le 2026-10-26 (Clients/**Message :** M08, reçu le 2026-10-29 (À classer/' "$B/M01-reponse.md" > "$T/b/M08-reponse.md"
 o="$(python3 -I "$C" --brouillons "$T/b" "$T/u.md" 2>&1)"
 if [ "$(printf '%s\n' "$o" | grep -c '^')" = 1 ] && printf '%s\n' "$o" | grep -q "M08 sender is not in the contacts list, no draft allowed"; then ok "unlisted sender with a draft fails (only that rule)"; else ko "unlisted sender with a draft: $o"; fi
 mutate "message in both lists fails" '/^- \*\*M05\*\*/a\
-- **M01** — Clients, urgence normale ; information, pas de réponse proposée'
+- **M01** : Clients, urgence normale ; information, pas de réponse proposée'
 { cat "$E"; echo "Nous vous recommandons ce fonds."; } > "$T/a.md"; expect "advice wording fails" 1 "$T/a.md" --brouillons "$B"
 { cat "$E"; echo "Les réponses ont été envoyées."; } > "$T/a.md"; expect "send claim fails" 1 "$T/a.md" --brouillons "$B"
 { cat "$E"; echo "Contact : client@example.com"; } > "$T/a.md"; expect "email address fails" 1 "$T/a.md" --brouillons "$B"
@@ -94,6 +94,19 @@ dmutate "e-mail address in a draft fails" M01-reponse.md 's/^Merci pour votre me
 dmutate "link in a draft fails" M09-reponse.md 's/^Merci pour l.envoi de ces pièces\./Déposez-les sur https:\/\/depot.example\/x./'
 dmutate "advice in a draft fails" M04-reponse.md 's/^Merci pour l.envoi/Nous vous conseillons un fonds. Merci pour l envoi/'
 dmutate "draft without Relecture fails" M01-reponse.md '/^## Relecture/d'
+# dashes: none in the triage nor the drafts
+mutate "em dash in the rule fails" '/^Boîte lue/s/(mbox)\. /(mbox) — /'
+mutate "en dash used as a dash fails" '/^Boîte lue/s/(mbox)\. /(mbox) – /'
+mutate "em dash in the banner fails" '1s/BROUILLON :/BROUILLON —/'
+dmutate "em dash in a draft fails" M02-reponse.md 's/^Bonjour,$/Bonjour,\
+Merci — à bientôt./'
+dmutate "em dash in a draft banner fails" M02-reponse.md '1s/RÉPONSE :/RÉPONSE —/'
+{ cat "$E"; echo "Période 2026–2027."; } > "$T/a.md"; expect "en dash between two digits passes" 0 "$T/a.md" --brouillons "$B"
+o="$(cat "$E" "$B"/*.md "$D/template.md" "$D/SKILL.md")"; hasnt "no em dash in the examples, template and SKILL.md" "—" "$o"; hasnt "no en dash in the examples, template and SKILL.md" "–" "$o"
+# advice question with a draft in the table
+sed '/^| M01 |/s/motif : rendez-vous (« rendez-vous »)/motif : question de conseil (« que me conseillez vous »)/' "$E" > "$T/c.md"
+o="$(python3 -I "$C" --brouillons "$B" "$T/c.md" 2>&1)"
+if printf '%s\n' "$o" | grep -q "M01 is an advice question, no draft allowed"; then ok "advice question with a draft fails"; else ko "advice question with a draft: $o"; fi
 
 # ---------- reader on the fictional mailbox: the example's sections are exactly the reader output ----------
 out="$(run --boite "$X" --contacts "$K" 2>"$T/err")"; rc=$?
@@ -107,9 +120,9 @@ has "complaint is urgent" "| M03 | 2026-10-28 | @messagerie.example | « Réclam
 has "deadline word is urgent" "domaine @association-pro.example dans la liste des contacts ; motif : administratif (« cotisation ») ; mot « avant le »" "$out"
 has "bank detail change is vigilance, no draft" "motif : vigilance (« coordonnées bancaires + changement ») ; vigilance : demande de coordonnées bancaires" "$out"
 has "reply-to on another domain shown" "adresse de réponse sur un autre domaine (@autre-domaine.example)" "$out"
-has "unknown sender listed without draft" "- **M08** — À classer, urgence normale ; expéditeur hors liste des contacts, pas de réponse proposée" "$out"
+has "unknown sender listed without draft" "- **M08** : À classer, urgence normale ; expéditeur hors liste des contacts, pas de réponse proposée" "$out"
 has "rule states the draft rule" "Brouillon de réponse seulement pour un expéditeur de la liste des contacts, jamais pour un expéditeur inconnu" "$out"
-has "vigilance listed without draft" "- **M07** — À classer, urgence haute ; vigilance, à vérifier par téléphone" "$out"
+has "vigilance listed without draft" "- **M07** : À classer, urgence haute ; vigilance, à vérifier par téléphone" "$out"
 has "mailing list is Information, low" "| M05 | 2026-10-28 | @plateforme-fictive.example | « La lettre de la plateforme, novembre 2026 » | Information | envoi automatique | basse |" "$out"
 has "no-reply sender is Information" "| M10 | 2026-10-29 | @plateforme-fictive.example | « Votre relevé de situation est disponible » | Information |" "$out"
 has "unknown sender is À classer, no draft" "| M08 | 2026-10-29 | @messagerie.example | « Premier contact : rendez-vous ? » | À classer | inconnu | normale | expéditeur absent de la liste des contacts ; motif : rendez-vous (« rendez-vous ») ; expéditeur hors liste des contacts, pas de brouillon | non |" "$out"
@@ -261,6 +274,42 @@ keeps "listed client: compte rendu and rendez-vous keep the draft" "Suite au ren
 keeps "listed client: rachat request keeps the draft" "Rachat partiel" <<< "Je souhaiterais faire un rachat partiel de 10 000 euros sur mon contrat, pouvez-vous m'indiquer la marche à suivre ?"
 keeps "listed client: documents keep the draft" "Pièces" <<< "Voici mon avis d'imposition et la pièce d'identité demandés."
 keeps "listed client: cotisation à régler keeps the draft" "Cotisation" <<< "J'ai bien reçu l'appel de cotisation, je la réglerai avant la fin du mois."
+# advice questions: flagged, no draft, even from a listed client
+advice() { # name from subject -- body on stdin
+  eml "$T/vc.eml" "$2" "$3"
+  local o; o="$(run --boite "$T/vc.eml" --contacts "$T/kv.csv" 2>/dev/null)"
+  if printf '%s\n' "$o" | grep -q '^| M01 | .*motif : question de conseil (« .* ») ; question de conseil, à traiter par vous, pas de brouillon.* | non |$' \
+     && printf '%s\n' "$o" | grep -q '^- \*\*M01\*\* : .* ; question de conseil, à traiter par vous$'; then ok "$1"; else ko "$1: $(printf '%s\n' "$o" | grep 'M01')"; fi
+}
+advice "advice: Dois-je vendre le fonds X ?" "$K1" "Question" <<< "Bonjour, dois-je vendre le fonds X ? Merci."
+advice "advice: faut-il acheter" "$K1" "Marchés" <<< "Avec la baisse, faut-il acheter des actions maintenant ?"
+advice "advice: que me conseillez-vous" "$K1" "Mon PEA" <<< "J'ai 20 000 euros sur mon PEA, que me conseillez-vous ?"
+advice "advice: devrais-je arbitrer" "$K1" "Contrat" <<< "Devrais-je arbitrer vers le fonds euros ?"
+advice "advice: est-ce le bon moment pour investir" "$K1" "Bourse" <<< "Est-ce le bon moment pour investir en bourse ?"
+advice "advice: me conseillez-vous de racheter" "$K1" "Assurance vie" <<< "Me conseillez-vous de racheter mon contrat ?"
+advice "advice: quel fonds choisir" "$K1" "PER" <<< "Quel fonds choisir pour mon PER ?"
+advice "advice: capitals and no accents (DOIS-JE VENDRE)" "$K1" "URGENT" <<< "DOIS-JE VENDRE MES PARTS ?"
+advice "advice: in the subject only" "$K1" "Faut-il vendre mes actions ?" <<< "Bonjour."
+advice "advice EN: should I sell" "$K1" "Question" <<< "Should I sell my shares now?"
+advice "advice EN: what do you recommend" "$K1" "Savings" <<< "What do you recommend for my savings?"
+advice "advice: unknown sender also flagged, no draft" "$U" "Question" <<< "Dois-je vendre le fonds X ?"
+notadvice() { # name subject -- body on stdin: listed client, ordinary message, not an advice question, keeps its draft
+  eml "$T/vc.eml" "$K1" "$2"
+  local o; o="$(run --boite "$T/vc.eml" --contacts "$T/kv.csv" 2>/dev/null | grep '^| M01')"
+  if printf '%s\n' "$o" | grep -q ' | M01-reponse.md |$' && ! printf '%s\n' "$o" | grep -q 'conseil'; then ok "$1"; else ko "$1: $o"; fi
+}
+notadvice "not advice: dois-je vous envoyer un document" "Documents" <<< "Dois-je vous envoyer mon avis d'imposition ?"
+notadvice "not advice: faut-il signer en original" "Signature" <<< "Faut-il signer les documents en original ?"
+notadvice "not advice: thanks for the advice" "Merci" <<< "Merci pour vos conseils lors de notre rendez-vous."
+notadvice "not advice: selling a house, call me" "Projet" <<< "Je vais vendre ma maison l'an prochain, pouvez-vous me rappeler ?"
+notadvice "not advice: rachat request" "Rachat partiel" <<< "Je souhaiterais faire un rachat partiel de 10 000 euros, pouvez-vous m'indiquer la marche à suivre ?"
+# no dash in what the reader writes
+eml "$T/vd.eml" "$K1" "Rendez-vous — jeudi – 10h" <<< "Bonjour, un créneau jeudi ?"
+rm -rf "$T/sd"; o="$(run --boite "$T/vd.eml" --contacts "$T/kv.csv" --brouillons "$T/sd" 2>/dev/null; cat "$T/sd"/*.md; run --boite "$T/vd.eml" --extrait M01 2>/dev/null)"
+hasnt "no em dash in the triage, skeleton or extract (subject dash masked)" "—" "$o"
+hasnt "no en dash in the triage, skeleton or extract" "–" "$o"
+o="$(run --boite "$X" --contacts "$K" 2>/dev/null; run --boite "$X" --contacts "$K" --extrait M01 2>/dev/null; cat "$T/sq"/*.md)"
+hasnt "no em dash in the fictional triage, skeletons and extract" "—" "$o"
 eml "$T/g.eml" "DGFiP <contact@dgfip.finances.gouv.fr>" "Votre déclaration" <<< "Bonjour."
 has "public authority domain not in the contacts file: no draft" "domaine public @gouv.fr ; motif : administratif (« declaration ») ; expéditeur hors liste des contacts, pas de brouillon | non |" "$(run --boite "$T/g.eml" 2>/dev/null)"
 eml "$T/vq.eml" "$U" "Bonjour" <<< "Le 28 oct. 2026, Cabinet <c@cabinet.example> a écrit :
@@ -274,7 +323,7 @@ hasnt "--extrait drops the quoted history after the sender's text" "Proposez un 
 has "--extrait says how many quoted lines were removed" "(2 lignes citées retirées : relire le message entier dans la messagerie)" "$o"
 mkdir -p "$T/vn"; : > "$T/vn/Dupont-Jean-succession.eml"
 o="$(run --boite "$T/vn" 2>/dev/null)"
-has "unreadable message listed by reference" "- **M01** — message vide ou illisible, non trié" "$o"
+has "unreadable message listed by reference" "- **M01** : message vide ou illisible, non trié" "$o"
 hasnt "unreadable message: file name not echoed" "Dupont" "$o"
 
 # ---------- malformed input ----------
@@ -295,7 +344,7 @@ printf 'Subject: sans expéditeur\n\nTexte\n' > "$T/nofrom.eml"
 has "no From: sender unreadable, À classer" "| M01 | (date illisible) | (illisible) | « sans expéditeur » | À classer | inconnu | normale | expéditeur illisible" "$(run --boite "$T/nofrom.eml" 2>/dev/null)"
 printf 'From x Thu Oct 29 10:00:00 2026\n\nFrom x Thu Oct 29 10:00:00 2026\nFrom: a@client.example\nSubject: ok\n\nTexte\n' > "$T/empty.mbox"
 out="$(run --boite "$T/empty.mbox" 2>/dev/null)"
-has "empty message in À vérifier, the next one sorted" "- **M01** — message vide ou illisible, non trié" "$out"
+has "empty message in À vérifier, the next one sorted" "- **M01** : message vide ou illisible, non trié" "$out"
 has "message after an empty one sorted" "| M02 |" "$out"
 # a 7 MB message (attachment), a 30 MB line without newline, then a normal message
 python3 -I - "$T/big.mbox" <<'PY'
@@ -321,8 +370,8 @@ PY
 read rss rc < "$T/rss"
 [ "$rc" = 0 ] && ok "huge mbox read (exit 0)" || ko "huge mbox read (rc $rc)"
 [ "$rss" -lt 150 ] && ok "huge mbox read with bounded memory (${rss} MB)" || ko "huge mbox memory ${rss} MB"
-has "big message flagged, read on its start" "- **M01** — message de plus de 5 Mo, lu sur le début seulement" "$(cat "$T/rss")"
-has "huge line message flagged" "- **M02** — message de plus de 5 Mo" "$(cat "$T/rss")"
+has "big message flagged, read on its start" "- **M01** : message de plus de 5 Mo, lu sur le début seulement" "$(cat "$T/rss")"
+has "huge line message flagged" "- **M02** : message de plus de 5 Mo" "$(cat "$T/rss")"
 has "message after the huge ones sorted" "| M03 | (date illisible) | @client.example | « rendez-vous » |" "$(cat "$T/rss")"
 # hostile structure: deeply nested MIME, HTML made of unclosed tags, a header full of open encoded words
 python3 -I - "$T/hostile.mbox" <<'PY'
@@ -340,7 +389,7 @@ PY
 start=$(date +%s); out="$(run --boite "$T/hostile.mbox" 2>"$T/err")"; rc=$?; took=$(( $(date +%s) - start ))
 [ "$rc" = 0 ] && ok "hostile mailbox read (exit 0)" || ko "hostile mailbox read (rc $rc: $(head -c 300 "$T/err"))"
 [ "$took" -lt 20 ] && ok "hostile mailbox read in bounded time (${took}s)" || ko "hostile mailbox took ${took}s"
-[ "$(printf '%s\n' "$out" | grep -cE '^(\| M0[1-4] \||- \*\*M0[1-4]\*\* — message)')" -ge 4 ] && ok "every hostile message sorted or listed" || ko "hostile messages missing"
+[ "$(printf '%s\n' "$out" | grep -cE '^(\| M0[1-4] \||- \*\*M0[1-4]\*\* : message)')" -ge 4 ] && ok "every hostile message sorted or listed" || ko "hostile messages missing"
 has "long subject cut in the table" "« aaaaaaaa" "$out"
 [ "$(printf '%s\n' "$out" | grep '^| M04 ' | wc -c)" -lt 600 ] && ok "long subject row stays short" || ko "long subject row too long"
 python3 -I - "$T/many.mbox" <<'PY'

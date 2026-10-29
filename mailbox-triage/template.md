@@ -1,4 +1,4 @@
-> **BROUILLON — préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Tri établi d'après les expéditeurs et des mots-clés, à contrôler. Aucun envoi.**
+> **BROUILLON : préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Tri établi d'après les expéditeurs et des mots-clés, à contrôler. Aucun envoi.**
 
 # Tri de la boîte mail du cabinet
 

@@ -6,9 +6,10 @@ Exit 0 = pass, 1 = problems, 2 = usage/IO error. Standard library only, no netwo
 Every message of the « Tri du courrier » table must be in exactly one list
 (« Réponses à préparer » or « Sans brouillon ») with the same category and
 urgency. Only a sender of the contacts list (« ... (liste) ») may have a draft;
-Information and vigilance messages have none. With --brouillons,
+Information, vigilance messages and advice questions have none. With --brouillons,
 every message to answer has exactly one completed draft file Mnn-reponse.md in
-the folder, and no other draft is there.
+the folder, and no other draft is there. No em dash (—) nor en dash used as a
+dash (–) in the triage or the drafts.
 """
 import os
 import re
@@ -34,6 +35,7 @@ EXECUTION = (r"\b(a|ont) été (effectuée?s?|exécutée?s?|réalisée?s?|valid�
 EMAIL = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
 URL = re.compile(r"\b(https?://|www\.)", re.I)
 QUOTED = re.compile(r"«[^»]*»")
+DASH = re.compile(r"—|(?<!\w)–|–(?!\w)")   # an en dash between two words or digits (2026–2027) is not a dash
 
 
 def sections(text, level="##"):
@@ -56,6 +58,8 @@ def banner_line(lines, word):
 
 def wording(lines, skip, problems, where="", execution=False):
     for n, line in enumerate(lines, 1):
+        if DASH.search(line):   # banner included
+            problems.append(f"{where}line {n}: dash '—' or '–' (use a colon, a comma or parentheses)")
         if n - 1 in skip:
             continue
         if EMAIL.search(line):
@@ -93,8 +97,10 @@ def check_table(secs, problems):
             problems.append(f"Tri du courrier: {ref} gives no reason")
         if draft not in ("non", f"{ref}-reponse.md"):
             problems.append(f"Tri du courrier: {ref} draft cell must be 'non' or '{ref}-reponse.md'")
-        if draft != "non" and (cat == "Information" or "vigilance" in why):
-            problems.append(f"Tri du courrier: {ref} is {'vigilance' if 'vigilance' in why else 'Information'}, no draft allowed")
+        kind = "vigilance" if "vigilance" in why else "an advice question" if "question de conseil" in why \
+            else "Information" if cat == "Information" else None
+        if draft != "non" and kind:
+            problems.append(f"Tri du courrier: {ref} is {kind}, no draft allowed")
         elif draft != "non" and (not stype.endswith("(liste)") or cat not in ("Clients", "Partenaires", "Administratif")):
             problems.append(f"Tri du courrier: {ref} sender is not in the contacts list, no draft allowed")
         if ref in table:
@@ -113,9 +119,9 @@ def check_lists(secs, table, problems):
         if not items and EMPTY[name] not in body.lower():
             problems.append(f"{name}: no message and no '{EMPTY[name]} ...' line")
         for b in items:
-            m = re.match(r"-\s+\*\*(M\d{2,3})\*\*\s+—\s+([^,]+), urgence (\w+) ; (.*)", b)
+            m = re.match(r"-\s+\*\*(M\d{2,3})\*\*\s+:\s+([^,]+), urgence (\w+) ; (.*)", b)
             if not m:
-                problems.append(f"{name}: item without '**Mnn** — catégorie, urgence ... ; ...': {b[:60]}")
+                problems.append(f"{name}: item without '**Mnn** : catégorie, urgence ... ; ...': {b[:60]}")
                 continue
             ref, cat, urg, rest = m.groups()
             seen.setdefault(ref, []).append(name)
@@ -147,8 +153,8 @@ def check_draft(path, ref):
     banner = banner_line(lines, "BROUILLON")
     if banner is None:
         problems.append(f"{where}missing BROUILLON banner (with 'Aucun envoi') in the first lines")
-    if not re.search(rf"^- \*\*Message :\*\* {ref} — ", text, re.M):
-        problems.append(f"{where}'- **Message :** {ref} — ...' line missing or for another message")
+    if not re.search(rf"^- \*\*Message :\*\* {ref}, reçu le ", text, re.M):
+        problems.append(f"{where}'- **Message :** {ref}, reçu le ...' line missing or for another message")
     if not re.search(r"^Objet\s*:", text, re.M) or not re.search(r"^Bonjour,\s*$", text, re.M):
         problems.append(f"{where}no 'Objet :' or 'Bonjour,' line")
     if "[Réponse à rédiger]" in text:

@@ -1,6 +1,6 @@
-> **BROUILLON DE RÉPONSE — préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Aucun envoi.**
+> **BROUILLON DE RÉPONSE : préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Aucun envoi.**
 
-- **Message :** M06 — reçu le 2026-10-29 — Administratif, urgence haute
+- **Message :** M06, reçu le 2026-10-29 (Administratif, urgence haute)
 - **Objet reçu :** « Appel de cotisation 2027 à régler avant le 30/11/2026 »
 
 Objet : Re: Appel de cotisation 2027 à régler avant le 30/11/2026
