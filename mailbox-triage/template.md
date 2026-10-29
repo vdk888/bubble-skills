@@ -24,7 +24,7 @@
 
 ## Limites
 
-Ce tri est établi d'après l'adresse de l'expéditeur, la liste des contacts du cabinet et des mots-clés de l'objet et du début du message. L'adresse affichée d'un expéditeur n'est pas vérifiée : elle peut être imitée. Un message peut être mal classé ou son urgence mal estimée : le cabinet relit chaque message dans sa messagerie. Le repérage « vigilance » repose lui aussi sur des mots-clés et reste incomplet : son absence ne signifie pas qu'un message est sûr, et toute demande touchant des coordonnées bancaires, un virement ou un code se vérifie par téléphone à un numéro connu. Les pièces jointes ne sont pas ouvertes. Les réponses sont des brouillons : aucun message n'est envoyé par l'outil, rien n'est confirmé ni exécuté. Ce brouillon ne donne aucun conseil en investissement.
+Ce tri est établi d'après l'adresse de l'expéditeur, la liste des contacts du cabinet et des mots-clés de l'objet et du début du message. L'adresse affichée d'un expéditeur n'est pas vérifiée : elle peut être imitée. Un message peut être mal classé ou son urgence mal estimée : le cabinet relit chaque message dans sa messagerie. Le repérage « vigilance » repose lui aussi sur des mots-clés et reste incomplet : son absence ne signifie pas qu'un message est sûr, et toute demande touchant des coordonnées bancaires, un virement ou un code se vérifie par téléphone à un numéro connu. Aucun brouillon n'est préparé pour un expéditeur absent de la liste des contacts. Les pièces jointes ne sont pas ouvertes. Les réponses sont des brouillons : aucun message n'est envoyé par l'outil, rien n'est confirmé ni exécuté. Ce brouillon ne donne aucun conseil en investissement.
 
 ## Relecture (cabinet)
 - [ ] Messages d'urgence haute relus en premier dans la messagerie

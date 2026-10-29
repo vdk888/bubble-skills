@@ -5,7 +5,8 @@ Usage: check_tri.py [--structure-only] [--brouillons <dossier>] <tri.md>
 Exit 0 = pass, 1 = problems, 2 = usage/IO error. Standard library only, no network.
 Every message of the « Tri du courrier » table must be in exactly one list
 (« Réponses à préparer » or « Sans brouillon ») with the same category and
-urgency. Information and vigilance messages have no draft. With --brouillons,
+urgency. Only a sender of the contacts list (« ... (liste) ») may have a draft;
+Information and vigilance messages have none. With --brouillons,
 every message to answer has exactly one completed draft file Mnn-reponse.md in
 the folder, and no other draft is there.
 """
@@ -78,7 +79,7 @@ def check_table(secs, problems):
         if len(cells) != 9:
             problems.append(f"Tri du courrier: row without 9 cells: {r[:50]}")
             continue
-        ref, _, _, _, cat, _, urg, why, draft = cells
+        ref, _, _, _, cat, stype, urg, why, draft = cells
         if ref.startswith("("):
             continue
         if not re.fullmatch(r"M\d{2,3}", ref):
@@ -94,6 +95,8 @@ def check_table(secs, problems):
             problems.append(f"Tri du courrier: {ref} draft cell must be 'non' or '{ref}-reponse.md'")
         if draft != "non" and (cat == "Information" or "vigilance" in why):
             problems.append(f"Tri du courrier: {ref} is {'vigilance' if 'vigilance' in why else 'Information'}, no draft allowed")
+        elif draft != "non" and (not stype.endswith("(liste)") or cat not in ("Clients", "Partenaires", "Administratif")):
+            problems.append(f"Tri du courrier: {ref} sender is not in the contacts list, no draft allowed")
         if ref in table:
             problems.append(f"Tri du courrier: {ref} appears twice")
         table[ref] = (cat, urg, draft != "non")
@@ -182,6 +185,8 @@ def check(text, structure_only=False, drafts_dir=None):
         rule = section(secs, "Règle appliquée") or ""
         if "Boîte lue :" not in rule or "L'adresse affichée n'est pas vérifiée" not in rule:
             problems.append("Règle appliquée: must name the 'Boîte lue :' and say 'L'adresse affichée n'est pas vérifiée'")
+        if "Brouillon de réponse seulement pour un expéditeur de la liste des contacts" not in rule:
+            problems.append("Règle appliquée: must say 'Brouillon de réponse seulement pour un expéditeur de la liste des contacts'")
         table = check_table(secs, problems)
         to_answer = check_lists(secs, table, problems)
         if drafts_dir is not None:

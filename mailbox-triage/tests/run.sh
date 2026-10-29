@@ -62,6 +62,14 @@ mutate "category differs between table and list fails" '/^- \*\*M01\*\*/s/Client
 mutate "unknown urgency fails" '/^| M01 |/s/| normale |/| moyenne |/'
 mutate "Information message with a draft fails" '/^| M05 |/s/| non |$/| M05-reponse.md |/'
 mutate "vigilance message with a draft fails" '/^| M07 |/s/| non |$/| M07-reponse.md |/'
+mutate "rule without the draft rule fails" 's/Brouillon de réponse seulement pour un expéditeur de la liste des contacts/Brouillon de réponse/'
+# unlisted sender with a draft, consistent everywhere else (table, list, draft file): only the new rule fails
+sed -e '/^| M08 |/s/| non |$/| M08-reponse.md |/' -e '/^- \*\*M08\*\*/d' \
+    -e '/^- \*\*M09\*\* — Clients, urgence normale ; brouillon M09-reponse.md/a\
+- **M08** — À classer, urgence normale ; brouillon M08-reponse.md' "$E" > "$T/u.md"
+rm -rf "$T/b"; cp -R "$B" "$T/b"; sed 's/\*\*Message :\*\* M01 — reçu le 2026-10-26 — Clients/**Message :** M08 — reçu le 2026-10-29 — À classer/' "$B/M01-reponse.md" > "$T/b/M08-reponse.md"
+o="$(python3 -I "$C" --brouillons "$T/b" "$T/u.md" 2>&1)"
+if [ "$(printf '%s\n' "$o" | grep -c '^')" = 1 ] && printf '%s\n' "$o" | grep -q "M08 sender is not in the contacts list, no draft allowed"; then ok "unlisted sender with a draft fails (only that rule)"; else ko "unlisted sender with a draft: $o"; fi
 mutate "message in both lists fails" '/^- \*\*M05\*\*/a\
 - **M01** — Clients, urgence normale ; information, pas de réponse proposée'
 { cat "$E"; echo "Nous vous recommandons ce fonds."; } > "$T/a.md"; expect "advice wording fails" 1 "$T/a.md" --brouillons "$B"
@@ -84,7 +92,7 @@ dmutate "execution claim (nous avons procédé) fails" M06-reponse.md 's/Le règ
 dmutate "send claim in a draft fails" M01-reponse.md 's/^Merci pour votre message\./Nous avons répondu à votre message./'
 dmutate "e-mail address in a draft fails" M01-reponse.md 's/^Merci pour votre message\./Écrivez à cabinet@exemple.example./'
 dmutate "link in a draft fails" M09-reponse.md 's/^Merci pour l.envoi de ces pièces\./Déposez-les sur https:\/\/depot.example\/x./'
-dmutate "advice in a draft fails" M08-reponse.md 's/^Merci pour votre message/Nous vous conseillons un fonds. Merci/'
+dmutate "advice in a draft fails" M04-reponse.md 's/^Merci pour l.envoi/Nous vous conseillons un fonds. Merci pour l envoi/'
 dmutate "draft without Relecture fails" M01-reponse.md '/^## Relecture/d'
 
 # ---------- reader on the fictional mailbox: the example's sections are exactly the reader output ----------
@@ -92,17 +100,19 @@ out="$(run --boite "$X" --contacts "$K" 2>"$T/err")"; rc=$?
 [ "$rc" = 0 ] && ok "reader runs on the fictional mbox" || ko "reader runs on the fictional mbox (rc $rc)"
 printf '%s\n' "$out" > "$T/out.md"
 if [ "$(grep -cxFf "$T/out.md" "$E")" -ge "$(grep -c . "$T/out.md")" ]; then ok "example sections match the reader output"; else ko "example sections differ from the reader output"; fi
-has "count line on stderr" "10 messages triés : 4 urgence haute, 4 normale, 2 basse ; 7 réponses à préparer, 0 point à vérifier" "$(cat "$T/err")"
+has "count line on stderr" "10 messages triés : 4 urgence haute, 4 normale, 2 basse ; 6 réponses à préparer, 0 point à vérifier" "$(cat "$T/err")"
 has "rule names the mailbox and the contacts file" "Boîte lue : fictional-boite.mbox (mbox). Chaque message" "$out"
 has "client request on a contract is urgent" "| M02 | 2026-10-27 | @messagerie.example | « Rachat partiel sur mon contrat » | Clients | client (liste) | haute | adresse dans la liste des contacts ; motif : opération (« rachat ») | M02-reponse.md |" "$out"
 has "complaint is urgent" "| M03 | 2026-10-28 | @messagerie.example | « Réclamation : frais prélevés sur mon relevé » | Clients | client (liste) | haute |" "$out"
 has "deadline word is urgent" "domaine @association-pro.example dans la liste des contacts ; motif : administratif (« cotisation ») ; mot « avant le »" "$out"
 has "bank detail change is vigilance, no draft" "motif : vigilance (« coordonnées bancaires + changement ») ; vigilance : demande de coordonnées bancaires" "$out"
 has "reply-to on another domain shown" "adresse de réponse sur un autre domaine (@autre-domaine.example)" "$out"
+has "unknown sender listed without draft" "- **M08** — À classer, urgence normale ; expéditeur hors liste des contacts, pas de réponse proposée" "$out"
+has "rule states the draft rule" "Brouillon de réponse seulement pour un expéditeur de la liste des contacts, jamais pour un expéditeur inconnu" "$out"
 has "vigilance listed without draft" "- **M07** — À classer, urgence haute ; vigilance, à vérifier par téléphone" "$out"
 has "mailing list is Information, low" "| M05 | 2026-10-28 | @plateforme-fictive.example | « La lettre de la plateforme, novembre 2026 » | Information | envoi automatique | basse |" "$out"
 has "no-reply sender is Information" "| M10 | 2026-10-29 | @plateforme-fictive.example | « Votre relevé de situation est disponible » | Information |" "$out"
-has "unknown sender is À classer with a draft" "| M08 | 2026-10-29 | @messagerie.example | « Premier contact : rendez-vous ? » | À classer | inconnu | normale | expéditeur absent de la liste des contacts" "$out"
+has "unknown sender is À classer, no draft" "| M08 | 2026-10-29 | @messagerie.example | « Premier contact : rendez-vous ? » | À classer | inconnu | normale | expéditeur absent de la liste des contacts ; motif : rendez-vous (« rendez-vous ») ; expéditeur hors liste des contacts, pas de brouillon | non |" "$out"
 has "ISO-8859-1 encoded subject decoded" "| M09 | 2026-10-29 | @messagerie.example | « Pièces demandées » | Clients" "$out"
 has "attachment counted, not opened" "motif : documents (« pieces demandees ») ; 1 pièce jointe non ouverte" "$out"
 hasnt "no sender address in the triage" "client.ex001@" "$out"
@@ -120,8 +130,8 @@ rc_is "extract of an unknown message is an error" 2 run --boite "$X" --extrait M
 rc_is "extract with a bad reference is an error" 2 run --boite "$X" --extrait '../x'
 # skeletons
 rc_is "skeletons written" 0 run --boite "$X" --contacts "$K" --brouillons "$T/sq"
-has "skeleton count on stderr" "7 squelettes de réponse écrits" "$(cat "$T/e")"
-[ "$(ls "$T/sq" | tr '\n' ' ')" = "M01-reponse.md M02-reponse.md M03-reponse.md M04-reponse.md M06-reponse.md M08-reponse.md M09-reponse.md " ] && ok "one skeleton per message to answer, none for M05 M07 M10" || ko "skeleton files: $(ls "$T/sq")"
+has "skeleton count on stderr" "6 squelettes de réponse écrits" "$(cat "$T/e")"
+[ "$(ls "$T/sq" | tr '\n' ' ')" = "M01-reponse.md M02-reponse.md M03-reponse.md M04-reponse.md M06-reponse.md M09-reponse.md " ] && ok "one skeleton per listed sender to answer, none for M05 M07 M08 M10" || ko "skeleton files: $(ls "$T/sq")"
 expect "unfilled skeletons fail the check" 1 "$E" --brouillons "$T/sq"
 echo "note du conseiller" > "$T/sq/M01-reponse.md"
 rc_is "never overwrites an existing draft" 2 run --boite "$X" --contacts "$K" --brouillons "$T/sq"
@@ -163,40 +173,96 @@ vig() { # name from subject -- body on stdin: must be vigilance, urgency haute, 
   if printf '%s\n' "$o" | grep -q '^| M01 | .* | haute | .*motif : vigilance .* | non |$'; then ok "$1"; else ko "$1: $(printf '%s\n' "$o" | grep '^| M01')"; fi
 }
 U="Inconnu <x@inconnu.example>"
-vig "probe: nouvel IBAN" "$U" "Information" <<< "Ci-joint nouvel IBAN du cabinet"
-vig "probe: RIB a changé + FR76 number" "$U" "Coordonnées" <<< "Mon RIB a changé, utilisez le compte FR76 3000 1007 9412 3456 7890 185"
-vig "probe: virer de toute urgence" "$U" "Demande" <<< "Merci de virer 5000 euros sur ce compte de toute urgence"
-vig "probe: code reçu par SMS à confirmer" "$U" "Sécurité" <<< "Voici le code reçu par SMS… pouvez-vous le confirmer"
-vig "probe: envoyer l'OTP" "$U" "Accès" <<< "Pouvez-vous m'envoyer l'OTP ?"
-vig "probe EN: wire funds to new account details" "$U" "Payment" <<< "Please wire funds to the new account details below."
-vig "probe EN: bank details have changed" "$U" "Notice" <<< "Our bank details have changed, please update your records."
-vig "probe EN: send the verification code" "$U" "Login" <<< "Could you send me the verification code you received?"
-vig "probe EN: urgent transfer today" "$U" "Request" <<< "I need you to make a transfer today, it is urgent and confidential."
-vig "probe EN: share your password" "$U" "Account" <<< "Please share your password so we can fix the account."
+K1="Client <client@client.example>"
+nodraft() { # name from subject -- body on stdin: unlisted sender, no draft whatever the text
+  eml "$T/v.eml" "$2" "$3"
+  local o; o="$(run --boite "$T/v.eml" --contacts "$T/kv.csv" 2>/dev/null)"
+  if printf '%s\n' "$o" | grep -q '^| M01 | .* | non |$'; then ok "$1"; else ko "$1: $(printf '%s\n' "$o" | grep '^| M01')"; fi
+}
+# probe name subject [html] -- body on stdin: from an unknown sender no draft, from a listed client vigilance
+probe() {
+  local body; body="$(cat)"
+  if [ "${3:-}" = html ]; then
+    for s in "$U" "$K1"; do
+      printf 'From: %s\nSubject: %s\nMIME-Version: 1.0\nContent-Type: text/html; charset=UTF-8\n\n%s\n' "$s" "$2" "$body" > "$T/v.eml"
+      o="$(run --boite "$T/v.eml" --contacts "$T/kv.csv" 2>/dev/null | grep '^| M01')"
+      case "$s" in
+        "$U") printf '%s\n' "$o" | grep -q ' | non |$' && ok "$1 (unknown sender: no draft)" || ko "$1 (unknown sender): $o";;
+        *) printf '%s\n' "$o" | grep -q ' | haute | .*motif : vigilance .* | non |$' && ok "$1 (listed client: vigilance)" || ko "$1 (listed client): $o";;
+      esac
+    done
+  else
+    nodraft "$1 (unknown sender: no draft)" "$U" "$2" <<< "$body"
+    vig "$1 (listed client: vigilance)" "$K1" "$2" <<< "$body"
+  fi
+}
+# first review
+probe "probe: nouvel IBAN" "Information" <<< "Ci-joint nouvel IBAN du cabinet"
+probe "probe: RIB a changé + FR76 number" "Coordonnées" <<< "Mon RIB a changé, utilisez le compte FR76 3000 1007 9412 3456 7890 185"
+probe "probe: virer de toute urgence" "Demande" <<< "Merci de virer 5000 euros sur ce compte de toute urgence"
+probe "probe: code reçu par SMS à confirmer" "Sécurité" <<< "Voici le code reçu par SMS… pouvez-vous le confirmer"
+probe "probe: envoyer l'OTP" "Accès" <<< "Pouvez-vous m'envoyer l'OTP ?"
+probe "probe EN: wire funds to new account details" "Payment" <<< "Please wire funds to the new account details below."
+probe "probe EN: bank details have changed" "Notice" <<< "Our bank details have changed, please update your records."
+probe "probe EN: send the verification code" "Login" <<< "Could you send me the verification code you received?"
+probe "probe EN: urgent transfer today" "Request" <<< "I need you to make a transfer today, it is urgent and confidential."
+probe "probe EN: share your password" "Account" <<< "Please share your password so we can fix the account."
+probe "probe: request after 4000 characters of padding" "Bonjour" <<< "$(printf 'Bonjour.%.0s ' $(seq 1 500))
+merci de changer mon RIB"
+probe "probe: request below a hostile « a écrit » line" "Bonjour" <<< "Le 28 oct. 2026, Cabinet <c@cabinet.example> a écrit :
+merci de changer mon RIB pour le prochain règlement"
+probe "probe: request inside quoted '>' lines" "Re: suivi" <<< "Bonjour,
+> nouvelles coordonnées bancaires ci-dessous"
+probe "probe: zero-width character inside RIB" "Info" <<< "$(printf 'Nouveau R\342\200\213IB ci-joint')"
+probe "probe: subject only" "Changement de coordonnées bancaires" <<< "Bonjour."
+probe "probe: request only in an HTML body" "Suivi" html <<< "<p>Merci de noter mon nouvel IBAN</p>"
+# second review
+probe "probe: transfert urgent (French)" "Demande" <<< "Merci d'effectuer un transfert urgent de 8000 euros"
+probe "probe: nouveau numéro de compte" "Info" <<< "Voici mon nouveau numéro de compte"
+probe "probe: régler sur le nouveau compte, immédiatement" "Règlement" <<< "Merci de régler sur le nouveau compte, immédiatement"
+probe "probe: r.i.b with dots" "Info" <<< "mon r.i.b a changé"
+probe "probe: R I B with spaces" "Info" <<< "mon R I B a changé"
+probe "probe: HTML split R<b>I</b>B" "Info" html <<< "<p>R<b>I</b>B a changé</p>"
+probe "probe: HTML split R<span>IB</span>" "Info" html <<< "<p>Mon R<span>IB</span> a changé</p>"
+probe "probe: Cyrillic І in RІB" "Info" <<< "Mon RІB a changé"
+probe "probe: Cyrillic letters folded, not only flagged" "Info" <<< "Nouvel ІВАN ci-joint"
+probe "probe: cartes cadeaux urgent" "Service" <<< "Pouvez-vous m'acheter des cartes cadeaux, c'est urgent"
+probe "probe: carte bancaire et cryptogramme" "Vérification" <<< "Envoyez-moi votre carte bancaire et le cryptogramme"
+probe "probe: chiffre reçu par texto" "Appel" <<< "Lisez-moi le chiffre reçu par texto"
+probe "probe EN: 6-digit number just received" "Check" <<< "Please send the 6-digit number you just received"
+probe "probe: o.t.p spelled with dots" "Accès" <<< "Donnez-moi l'o.t.p"
+# an unknown sender never gets a draft, whatever the text
+nodraft "unknown sender: ordinary rendez-vous request, no draft" "$U" "Rendez-vous" <<< "Bonjour, un créneau jeudi ?"
+nodraft "unknown sender: thanks only, no draft" "$U" "Merci" <<< "Merci pour votre accueil."
 vig "unknown sender: any IBAN mention" "$U" "Bonjour" <<< "Voici notre IBAN pour la facture."
 vig "unknown sender: any virement mention" "$U" "Bonjour" <<< "Le virement est prévu."
-o="$(eml "$T/v.eml" "Client <client@client.example>" "RIB" <<< "Mon nouveau RIB : FR76 3000 1007 9412 3456 7890 185"; run --boite "$T/v.eml" --contacts "$T/kv.csv" 2>/dev/null)"
-hasnt "IBAN number never echoed in the triage" "3000" "$o"
 vig "unknown sender: any code mention" "$U" "Bonjour" <<< "Merci de me donner le code."
-vig "listed client: nouveau RIB still vigilance" "Client <client@client.example>" "Changement" <<< "Je vous transmets mon nouveau RIB."
-vig "listed client: urgent virement still vigilance" "Client <client@client.example>" "Virement" <<< "Pouvez-vous faire le virement en urgence ?"
-vig "listed client: code reçu par SMS still vigilance" "Client <client@client.example>" "Code" <<< "Je vous lis le code reçu par SMS : 123456"
-vig "probe: request after 4000 characters of padding" "$U" "Bonjour" <<< "$(printf 'Bonjour.%.0s ' $(seq 1 500))
-merci de changer mon RIB"
-vig "probe: request below a hostile « a écrit » line" "$U" "Bonjour" <<< "Le 28 oct. 2026, Cabinet <c@cabinet.example> a écrit :
-merci de changer mon RIB pour le prochain règlement"
-vig "request inside quoted '>' lines" "$U" "Re: suivi" <<< "Bonjour,
-> nouvelles coordonnées bancaires ci-dessous"
-vig "zero-width character inside RIB" "$U" "Info" <<< "$(printf 'Nouveau R\342\200\213IB ci-joint')"
-vig "subject only" "$U" "Changement de coordonnées bancaires" <<< "Bonjour."
-{ printf 'From: Inconnu <x@inconnu.example>\nSubject: Documents\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=b\n\n--b\nContent-Type: text/plain; charset=UTF-8\n\nBonjour, voir ci-joint.\n--b\nContent-Type: application/pdf; name="nouveau_RIB.pdf"\nContent-Disposition: attachment; filename="nouveau_RIB.pdf"\n\nJVBERi0=\n--b--\n'; } > "$T/va.eml"
-has "attachment name nouveau_RIB.pdf is vigilance" "motif : vigilance (« coordonnées bancaires + changement »)" "$(run --boite "$T/va.eml" 2>/dev/null)"
+o="$(eml "$T/v.eml" "$K1" "RIB" <<< "Mon nouveau RIB : FR76 3000 1007 9412 3456 7890 185"; run --boite "$T/v.eml" --contacts "$T/kv.csv" 2>/dev/null)"
+hasnt "IBAN number never echoed in the triage" "3000" "$o"
+vig "listed client: nouveau RIB still vigilance" "$K1" "Changement" <<< "Je vous transmets mon nouveau RIB."
+vig "listed client: urgent virement still vigilance" "$K1" "Virement" <<< "Pouvez-vous faire le virement en urgence ?"
+vig "listed client: code reçu par SMS still vigilance" "$K1" "Code" <<< "Je vous lis le code reçu par SMS : 123456"
+for s in "$U" "$K1"; do
+  { printf 'From: %s\nSubject: Documents\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=b\n\n--b\nContent-Type: text/plain; charset=UTF-8\n\nBonjour, voir ci-joint.\n--b\nContent-Type: application/pdf; name="nouveau_RIB.pdf"\nContent-Disposition: attachment; filename="nouveau_RIB.pdf"\n\nJVBERi0=\n--b--\n' "$s"; } > "$T/va.eml"
+  has "attachment name nouveau_RIB.pdf is vigilance ($s)" "motif : vigilance (« coordonnées bancaires + changement ») ; vigilance" "$(run --boite "$T/va.eml" --contacts "$T/kv.csv" 2>/dev/null)"
+done
 { printf 'From: Client <client@client.example>\nSubject: Suivi\nMIME-Version: 1.0\nContent-Type: multipart/alternative; boundary=b\n\n--b\nContent-Type: text/plain; charset=UTF-8\n\nBonjour.\n--b\nContent-Type: text/html; charset=UTF-8\n\n<p>Merci de noter mon nouvel IBAN</p>\n--b--\n'; } > "$T/vh.eml"
-has "request only in the HTML part is vigilance" "| non |" "$(run --boite "$T/vh.eml" --contacts "$T/kv.csv" 2>/dev/null | grep '^| M01')"
+has "request only in the HTML alternative part is vigilance" "| non |" "$(run --boite "$T/vh.eml" --contacts "$T/kv.csv" 2>/dev/null | grep '^| M01')"
 eml "$T/vl.eml" "$U" "Bonjour" <<< "$(head -c 200000 /dev/zero | tr '\0' 'a')"
 has "text too long to be read whole is vigilance, no draft" "motif : vigilance (« texte trop long pour être lu en entier »)" "$(run --boite "$T/vl.eml" 2>/dev/null)"
 eml "$T/vc.eml" "Client <client@client.example>" "Rendez-vous" <<< "Bonjour, un créneau jeudi ?"
 has "ordinary client message keeps its draft" "| M01-reponse.md |" "$(run --boite "$T/vc.eml" --contacts "$T/kv.csv" 2>/dev/null)"
+keeps() { # name subject -- body on stdin: listed client, ordinary message, keeps its draft
+  eml "$T/vc.eml" "$K1" "$2"
+  local o; o="$(run --boite "$T/vc.eml" --contacts "$T/kv.csv" 2>/dev/null | grep '^| M01')"
+  if printf '%s\n' "$o" | grep -q ' | M01-reponse.md |$' && ! printf '%s\n' "$o" | grep -q vigilance; then ok "$1"; else ko "$1: $o"; fi
+}
+keeps "listed client: compte rendu and rendez-vous keep the draft" "Suite au rendez-vous" <<< "Merci pour le compte rendu de notre rendez-vous, compte tenu de mes projets je vous rappelle la semaine prochaine."
+keeps "listed client: rachat request keeps the draft" "Rachat partiel" <<< "Je souhaiterais faire un rachat partiel de 10 000 euros sur mon contrat, pouvez-vous m'indiquer la marche à suivre ?"
+keeps "listed client: documents keep the draft" "Pièces" <<< "Voici mon avis d'imposition et la pièce d'identité demandés."
+keeps "listed client: cotisation à régler keeps the draft" "Cotisation" <<< "J'ai bien reçu l'appel de cotisation, je la réglerai avant la fin du mois."
+eml "$T/g.eml" "DGFiP <contact@dgfip.finances.gouv.fr>" "Votre déclaration" <<< "Bonjour."
+has "public authority domain not in the contacts file: no draft" "domaine public @gouv.fr ; motif : administratif (« declaration ») ; expéditeur hors liste des contacts, pas de brouillon | non |" "$(run --boite "$T/g.eml" 2>/dev/null)"
 eml "$T/vq.eml" "$U" "Bonjour" <<< "Le 28 oct. 2026, Cabinet <c@cabinet.example> a écrit :
 Je souhaite un rendez-vous jeudi."
 has "--extrait keeps the text below a leading « a écrit » line" "Je souhaite un rendez-vous jeudi." "$(run --boite "$T/vq.eml" --extrait M01 2>/dev/null)"

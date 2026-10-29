@@ -12,9 +12,12 @@ type, an urgency (haute, normale, basse) and the reasons (rules that fired).
 Sender type comes from the firm's contacts file (CSV, columns « Adresse » and
 « Type » = client, partenaire or administratif; an address or « @domaine »), and
 from a short built-in list of public authority domains. Mailing lists,
-automatic messages and no-reply senders are « Information », with no draft.
-Messages about bank details, a transfer or a code are « vigilance » (keywords on the whole text read,
-quoted history and attachment names included; any mention when the sender is not in the contacts file): no draft.
+automatic messages and no-reply senders are « Information ».
+A reply draft is prepared ONLY for a sender listed in the contacts file (address or @domain):
+unknown senders, public authority domains not in the file, Information and « À classer » get none.
+Messages about bank details, a transfer, a card or a code are « vigilance » (keywords on the whole text read,
+quoted history and attachment names included, after normalisation; any mention when the sender is not in the
+contacts file): urgency haute and no draft, even from a listed sender.
 Prints the triage sections in French Markdown on stdout, a count on stderr.
   --brouillons DIR  also writes one reply skeleton per message to answer
                     (DIR/Mnn-reponse.md); never overwrites a file.
@@ -52,15 +55,20 @@ WEBMAIL = {"gmail.com", "googlemail.com", "hotmail.com", "hotmail.fr", "outlook.
 ADDRESS_COLUMNS = {"adresse", "adresse e-mail", "adresse mail", "e-mail", "email", "courriel"}
 TYPES = {"client": "Clients", "partenaire": "Partenaires", "administratif": "Administratif"}
 # Vigilance: broad keyword sets on the whole text read (subject, every text part with its quoted history,
-# attachment names), as accent-free lower-case words separated by one space. When in doubt, no draft.
+# attachment names), normalised by words(): accent-free, case-folded, homoglyphs folded, invisible characters
+# dropped, words separated by one space, runs of single letters also read joined (« r.i.b » = « rib »).
+# A second gate for listed senders (a compromised client mailbox): unlisted senders never get a draft anyway.
 BANK = (r"ribs?|ibans?|bic|swift|coordonnees bancaires?|references bancaires|domiciliation bancaire|comptes? bancaires?"
         r"|compte en banque|releve d identite bancaire|bank details?|banking details|account details|bank accounts?"
-        r"|account number|sort code|routing number|[a-z]{2}\d{2}(?: ?[a-z0-9]{4}){3,}")  # last one: an IBAN number
+        r"|account number|sort code|routing number|numeros? de comptes?|nouve(?:au|aux|l|lle) (?:numero de )?comptes?"
+        r"|autres? comptes?|sur (?:le|ce|cet|un|mon|notre|leur) (?:nouveau |autre )?compte|cartes? bancaires?"
+        r"|cartes? de credit|credit cards?|[a-z]{2}\d{2}(?: ?[a-z0-9]{4}){3,}")  # last one: an IBAN number
 CHANGE = (r"nouve(?:au|aux|l|lle|lles)|ancien(?:ne)?s?|chang\w*|modifi\w*|mise a jour|mettre a jour|mis a jour|actualis\w*"
           r"|remplac\w*|autre compte|ce compte|le compte suivant|new|update\w*|different|other account|this account"
           r"|following account")
 TRANSFER = (r"virement\w*|vire|virer|virez|virons|virerez|wire\w*|transfer|transfers|transferring|paiements?|payer|payez"
-            r"|pay|payments?")
+            r"|pay|payments?|transferts?|transferer|transferez|transfere|transferons|regler|reglez|reglons|reglement\w*"
+            r"|effectuer un paiement|make a payment|send (?:the )?(?:money|funds)|envoyer (?:l |de l )?argent")
 HURRY = (r"urgent\w*|urgence|au plus vite|immediat\w*|aujourd hui|des que possible|rapidement|sans delai|asap|today"
          r"|immediately|right away|confidenti\w*|discret\w*|discreet")
 CODE = (r"otp|mots? de passe|pass(?:words?|code)|identifiants?|credentials|login details|codes? pin|pin|codes? secrets?"
@@ -68,7 +76,13 @@ CODE = (r"otp|mots? de passe|pass(?:words?|code)|identifiants?|credentials|login
         r"|(?:verification|security|confirmation|access|one time) codes?|one time pass\w*|codes? a usage unique"
         r"|code(?: \w+){0,8} (?:sms|texto|recu|confirm\w*|communiqu\w*|transm\w*|envoy\w*|envoie\w*|donn\w*|dict\w*"
         r"|lire|send|share|forward|give|read|text)"
-        r"|(?:sms|texto|recu|text message)(?: \w+){0,8} codes?")
+        r"|(?:sms|texto|recu|text message)(?: \w+){0,8} codes?"
+        r"|(?:chiffres?|numeros?|nombres?|digits?|numbers?)(?: \w+){0,8} (?:sms|texto|text message|text)"
+        r"|(?:sms|texto|text message)(?: \w+){0,8} (?:chiffres?|numeros?|nombres?|digits?|numbers?)"
+        r"|chiffres? recus?|(?:digits?|numbers?) (?:\w+ ){0,2}received|\d+ (?:digits?|chiffres)"
+        r"|cryptogrammes?|cvv|cvc|numeros? de (?:la |ma |votre )?carte|card (?:number|details)|date d expiration"
+        r"|cartes? cadeaux?|gift cards?|cartes? prepayees?|coupons? (?:pcs|transcash|neosurf)|transcash|neosurf"
+        r"|paysafecard|itunes cards?|google play cards?")
 CODE_WORD = r"codes?"
 # (motif, pattern on accent-free lower-case text); first match is the motif
 MOTIFS = [
@@ -92,7 +106,20 @@ class MailboxError(Exception):
 
 def norm(s):
     s = unicodedata.normalize("NFKD", s)
-    return "".join(c for c in s if not unicodedata.combining(c)).lower()
+    return "".join(c for c in s if not unicodedata.combining(c)).casefold()
+
+
+# Cyrillic and Greek letters that look like Latin ones (after case folding)
+HOMOGLYPHS = str.maketrans({"а": "a", "в": "b", "с": "c", "ԁ": "d", "е": "e", "һ": "h", "і": "i", "ј": "j", "к": "k",
+                            "ӏ": "l", "м": "m", "н": "h", "о": "o", "р": "p", "ԛ": "q", "ѕ": "s", "т": "t", "у": "y",
+                            "х": "x", "ь": "b", "α": "a", "β": "b", "ε": "e", "η": "n", "ι": "i", "κ": "k", "μ": "m",
+                            "ν": "v", "ο": "o", "ρ": "p", "τ": "t", "υ": "u", "χ": "x", "ϲ": "c", "ϳ": "j"})
+OTHER_SCRIPT = re.compile(r"[\u0370-\u03ff\u0400-\u052f]")
+
+
+def mixed_scripts(s):
+    """True if a word mixes Latin letters with Cyrillic or Greek ones (« RІB » with a Cyrillic І)."""
+    return any(OTHER_SCRIPT.search(t) and re.search(r"[a-z]", t) for t in re.findall(r"\w+", s))
 
 
 def plural(n, one, many):
@@ -218,6 +245,9 @@ def strip_html(s):
         i = len(s) if close < 0 else close + 1
     s = "".join(out)
     s = re.sub(r"(?i)<br\s*/?>|</p\s*>|</div\s*>", "\n", s)
+    # inline tags inside a word are dropped without a space (R<b>I</b>B is « RIB »), the others read as a space
+    s = re.sub(r"(?i)</?(?:a|abbr|b|big|code|del|em|font|i|ins|mark|q|s|small|span|strike|strong|sub|sup|tt|u)"
+               r"(?:\s[^<>]*)?/?>", "", s)
     s = re.sub(r"<[^<>]*>", " ", s)
     for a, b in (("&nbsp;", " "), ("&lt;", "<"), ("&gt;", ">"), ("&quot;", '"'), ("&#39;", "'"), ("&amp;", "&")):
         s = s.replace(a, b)
@@ -367,19 +397,35 @@ def sender_type(m, addrs, domains):
     return "À classer", "inconnu", "expéditeur absent de la liste des contacts"
 
 
+SPELLED = ("rib", "iban", "bic", "swift", "otp", "pin", "cvv", "cvc", "code", "sms")
+
+
+def spelled(m):
+    """A run of single letters joined, plus the short keywords it contains (« r i b a » -> « riba rib »)."""
+    j = m.group(0).replace(" ", "")
+    return " ".join([j] + [k for k in SPELLED if k in j and k != j])
+
+
 def words(s):
-    """Accent-free lower-case words joined by one space; invisible characters both dropped and read as a space."""
-    return " ".join(re.findall(r"[a-z0-9]+", norm(INVISIBLE.sub("", s) + "\n" + INVISIBLE.sub(" ", s))))
+    """Normalised words joined by one space (invisible characters both dropped and read as a space,
+    homoglyphs folded), then the same words with runs of single letters joined (« r i b » -> « rib », see spelled())."""
+    t = norm(INVISIBLE.sub("", s) + "\n" + INVISIBLE.sub(" ", s)).translate(HOMOGLYPHS)
+    w = re.findall(r"[a-z0-9]+", t)
+    joined = re.sub(r"\b[a-z0-9](?: [a-z0-9]\b)+", spelled, " ".join(w))
+    return " ".join(w) + "\n" + joined
 
 
 def vigilance(m, listed):
     """Return the words that make the message a « vigilance » one, else None. When in doubt, vigilance."""
     if m["partial"]:
         return "texte trop long pour être lu en entier"
-    w = words(m["subject"] + "\n" + m["whole"])
+    text = m["subject"] + "\n" + m["whole"]
+    w = words(text)
     has = lambda pat: re.search(rf"\b(?:{pat})\b", w) is not None   # labels only: never echo a number or a code
+    if mixed_scripts(norm(text)):
+        return "mot mêlant plusieurs alphabets"
     if has(CODE):
-        return "code ou mot de passe"
+        return "code, mot de passe, carte ou carte cadeau"
     bank, transfer = has(BANK), has(TRANSFER)
     for hit, label in ((bank and has(CHANGE), "coordonnées bancaires + changement"),
                        (transfer and has(HURRY), "virement + urgence"),
@@ -396,7 +442,8 @@ def classify(m, addrs, domains):
     reasons = [why]
     text = norm(m["subject"] + "\n" + m["text"])
     motif, word = "autre", None
-    vig = vigilance(m, stype.endswith("(liste)"))
+    listed = stype.endswith("(liste)")
+    vig = vigilance(m, listed)
     for name, pat in [] if vig else MOTIFS:
         hit = re.search(rf"\b({pat})\b", text)
         if hit:
@@ -409,7 +456,7 @@ def classify(m, addrs, domains):
         reasons = ["liste de diffusion, réponse automatique ou adresse sans réponse"]
     reasons.append(f"motif : {motif}" + (f" (« {word} »)" if word else ""))
     urgent = re.search(rf"\b({URGENT})\b", text)
-    draft = True
+    draft = listed   # a reply draft only for a sender in the contacts file
     if motif == "vigilance":
         urgency, draft = "haute", False
         reasons.append("vigilance : demande de coordonnées bancaires, de virement ou de code, "
@@ -428,6 +475,8 @@ def classify(m, addrs, domains):
         reasons.append(f"adresse de réponse sur un autre domaine (@{m['reply_domain']})")
     if m["attachments"]:
         reasons.append(plural(m["attachments"], "pièce jointe non ouverte", "pièces jointes non ouvertes"))
+    if not listed and motif != "vigilance" and category != "Information":
+        reasons.append("expéditeur hors liste des contacts, pas de brouillon")
     return {"category": category, "stype": stype, "urgency": urgency, "reasons": reasons, "draft": draft,
             "vigilance": motif == "vigilance"}
 
@@ -479,7 +528,9 @@ def render(path, contacts, source, recs, checks):
             + " ou si le domaine est celui d'une administration connue ; Information pour les listes de diffusion, "
             "les réponses automatiques et les adresses sans réponse ; À classer sinon. L'adresse affichée n'est pas "
             "vérifiée. Urgence haute : réclamation, demande d'opération sur un contrat, mot d'urgence ou de délai, "
-            "vigilance ; basse : Information ; normale sinon. Les pièces jointes ne sont pas ouvertes.")
+            "vigilance ; basse : Information ; normale sinon. Brouillon de réponse seulement pour un expéditeur de la "
+            "liste des contacts, jamais pour un expéditeur inconnu, une information ou un message « vigilance ». "
+            "Les pièces jointes ne sont pas ouvertes.")
     out = ["## Règle appliquée", "", f"Boîte lue : {src} ({source}). {rule}", "",
            "## Tri du courrier", "",
            "| Réf. | Reçu le | Expéditeur | Objet | Catégorie | Type d'expéditeur | Urgence | Raison | Brouillon |",
@@ -497,7 +548,9 @@ def render(path, contacts, source, recs, checks):
             for m in recs if m["draft"]] or ["Aucune réponse à préparer d'après le tri."]
     out += ["", "## Sans brouillon", ""]
     out += [f"- **{m['ref']}** — {m['category']}, urgence {m['urgency']} ; "
-            + ("vigilance, à vérifier par téléphone" if m["vigilance"] else "information, pas de réponse proposée")
+            + ("vigilance, à vérifier par téléphone" if m["vigilance"]
+               else "information, pas de réponse proposée" if m["category"] == "Information"
+               else "expéditeur hors liste des contacts, pas de réponse proposée")
             for m in recs if not m["draft"]] or ["Aucun message sans brouillon."]
     out += ["", "## À vérifier", ""]
     out += [f"- **{c['ref']}** — {c['why']}" if c["ref"] else f"- {c['why']}" for c in checks] or ["Aucun message à vérifier."]
