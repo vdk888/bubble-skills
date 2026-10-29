@@ -1,6 +1,6 @@
-> **BROUILLON DE RÉPONSE — préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Aucun envoi.**
+> **BROUILLON DE RÉPONSE : préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Aucun envoi.**
 
-- **Message :** M01 — reçu le 2026-10-26 — Clients, urgence normale
+- **Message :** M01, reçu le 2026-10-26 (Clients, urgence normale)
 - **Objet reçu :** « Demande de rendez-vous »
 
 Objet : Re: Demande de rendez-vous

@@ -1,4 +1,4 @@
-> **BROUILLON — préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Tri établi d'après les expéditeurs et des mots-clés, à contrôler. Aucun envoi.**
+> **BROUILLON : préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Tri établi d'après les expéditeurs et des mots-clés, à contrôler. Aucun envoi.**
 
 <!-- EXEMPLE FICTIF : boîte mail, expéditeurs, contacts et messages inventés pour illustrer le format. -->
 
@@ -11,7 +11,7 @@
 
 ## Règle appliquée
 
-Boîte lue : fictional-boite.mbox (mbox). Chaque message reçoit une catégorie d'après son expéditeur : Clients, Partenaires ou Administratif si l'adresse ou son domaine figure dans la liste des contacts du cabinet (fictional-contacts.csv) ou si le domaine est celui d'une administration connue ; Information pour les listes de diffusion, les réponses automatiques et les adresses sans réponse ; À classer sinon. L'adresse affichée n'est pas vérifiée. Urgence haute : réclamation, demande d'opération sur un contrat, mot d'urgence ou de délai, vigilance ; basse : Information ; normale sinon. Brouillon de réponse seulement pour un expéditeur de la liste des contacts, jamais pour un expéditeur inconnu, une information ou un message « vigilance ». Les pièces jointes ne sont pas ouvertes.
+Boîte lue : fictional-boite.mbox (mbox). Chaque message reçoit une catégorie d'après son expéditeur : Clients, Partenaires ou Administratif si l'adresse ou son domaine figure dans la liste des contacts du cabinet (fictional-contacts.csv) ou si le domaine est celui d'une administration connue ; Information pour les listes de diffusion, les réponses automatiques et les adresses sans réponse ; À classer sinon. L'adresse affichée n'est pas vérifiée. Urgence haute : réclamation, demande d'opération sur un contrat, mot d'urgence ou de délai, vigilance ; basse : Information ; normale sinon. Brouillon de réponse seulement pour un expéditeur de la liste des contacts, jamais pour un expéditeur inconnu, une information, un message « vigilance » ou une question de conseil (à traiter par le conseiller). Les pièces jointes ne sont pas ouvertes.
 
 ## Tri du courrier
 
@@ -30,19 +30,19 @@ Boîte lue : fictional-boite.mbox (mbox). Chaque message reçoit une catégorie 
 
 ## Réponses à préparer
 
-- **M02** — Clients, urgence haute ; brouillon M02-reponse.md
-- **M03** — Clients, urgence haute ; brouillon M03-reponse.md
-- **M06** — Administratif, urgence haute ; brouillon M06-reponse.md
-- **M01** — Clients, urgence normale ; brouillon M01-reponse.md
-- **M04** — Partenaires, urgence normale ; brouillon M04-reponse.md
-- **M09** — Clients, urgence normale ; brouillon M09-reponse.md
+- **M02** : Clients, urgence haute ; brouillon M02-reponse.md
+- **M03** : Clients, urgence haute ; brouillon M03-reponse.md
+- **M06** : Administratif, urgence haute ; brouillon M06-reponse.md
+- **M01** : Clients, urgence normale ; brouillon M01-reponse.md
+- **M04** : Partenaires, urgence normale ; brouillon M04-reponse.md
+- **M09** : Clients, urgence normale ; brouillon M09-reponse.md
 
 ## Sans brouillon
 
-- **M07** — À classer, urgence haute ; vigilance, à vérifier par téléphone
-- **M08** — À classer, urgence normale ; expéditeur hors liste des contacts, pas de réponse proposée
-- **M05** — Information, urgence basse ; information, pas de réponse proposée
-- **M10** — Information, urgence basse ; information, pas de réponse proposée
+- **M07** : À classer, urgence haute ; vigilance, à vérifier par téléphone
+- **M08** : À classer, urgence normale ; expéditeur hors liste des contacts, pas de réponse proposée
+- **M05** : Information, urgence basse ; information, pas de réponse proposée
+- **M10** : Information, urgence basse ; information, pas de réponse proposée
 
 ## À vérifier
 

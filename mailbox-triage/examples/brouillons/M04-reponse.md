@@ -1,6 +1,6 @@
-> **BROUILLON DE RÉPONSE — préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Aucun envoi.**
+> **BROUILLON DE RÉPONSE : préparé par un assistant, à relire par le cabinet. L'outil prépare, vous validez. Aucun envoi.**
 
-- **Message :** M04 — reçu le 2026-10-28 — Partenaires, urgence normale
+- **Message :** M04, reçu le 2026-10-28 (Partenaires, urgence normale)
 - **Objet reçu :** « Bordereau de commissions du troisième trimestre »
 
 Objet : Re: Bordereau de commissions du troisième trimestre
