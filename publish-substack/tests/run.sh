@@ -57,6 +57,10 @@ want "paid label for paid" 0 python3 -I "$G" label --audience paid "Send to paid
 want "paid FR" 0 python3 -I "$G" label --audience paid "Envoyer aux abonnés payants"
 want "everyone button on paid item stops" 1 python3 -I "$G" label --audience paid "Send to everyone"
 want "paid button on everyone item stops" 1 python3 -I "$G" label --audience everyone "Send to paid subscribers"
+want "Note button Post (everyone)" 0 python3 -I "$G" label --audience everyone "Post"
+want "Note button Publier (everyone)" 0 python3 -I "$G" label --audience everyone "Publier"
+want "Note button Post on paid item stops" 1 python3 -I "$G" label --audience paid "Post"
+want "Postpone is not Post" 1 python3 -I "$G" label --audience everyone "Postpone"
 want "unknown button stops" 1 python3 -I "$G" label --audience everyone "Do something"
 
 # read-back

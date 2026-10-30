@@ -19,13 +19,16 @@ FORBIDDEN_ACTIONS = {"like", "comment", "reply", "restack", "follow", "message",
 MAX_WORDS = {"note": 600, "post": 4000}
 # final-button wording per audience, English and French (matched lower-case, accents folded)
 LABELS = {
-    "everyone": ["send to everyone", "publish", "envoyer a tous", "publier"],
+    "everyone": ["send to everyone", "publish", "envoyer a tous", "publier"],  # + exact Note buttons below
     "paid": ["send to paid subscribers", "envoyer aux abonnes payants"],
     "founding": ["send to founding members", "envoyer aux membres fondateurs"],
 }
 WRONG = {  # a label of another audience is always a mismatch
     a: [l for b, ls in LABELS.items() if b != a for l in ls] for a in LABELS
 }
+
+
+NOTE_BUTTONS = {"post", "publier"}  # Note composer final button (EN, FR); exact match only
 
 
 def fold(s):
@@ -97,6 +100,8 @@ def label_ok(audience, button):
     if any(w in b for w in WRONG[audience]) and not any(w in b for w in LABELS[audience]):
         return False
     # "send to everyone" is a substring-safe check only for its own audience
+    if audience == "everyone" and b in NOTE_BUTTONS:  # the Note composer's own button
+        return True
     return any(b.startswith(w) for w in LABELS[audience])
 
 

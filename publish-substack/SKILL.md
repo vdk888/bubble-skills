@@ -23,6 +23,18 @@ It replaces `publish-substack-note` and `publish-substack-post` (one skill, both
 
 Write the input as a request file and check it: `python3 -I bin/gate.py request FILE.json` (exit 0 = ok).
 
+## Sequence (fixed order, never reorder)
+
+1. **Request check:** `gate.py request FILE.json` must print `ok`.
+2. **Attempt recorded:** `gate.py attempt ...` must print `ok`, before the browser is touched.
+3. **Browser preflight** (Method below), then fill the item without clicking the final button.
+4. **Read-back:** `gate.py readback ...` must print `ok` (text read from the editor equals the approved text).
+5. **Audience check:** `gate.py label ...` on the final button must print `ok`.
+6. **Human yes** (rule 2) to the exact item shown, then **publish**: one click on the final button.
+7. **Confirm and record** the URL.
+
+If any `gate.py` step is skipped, fails or prints anything but `ok`, the run stops there and reports why. Do not continue "to see", do not retry.
+
 ## Rules (every run)
 
 1. **Own account, own browser.** Use only the Chrome you are signed into, one browser and one tab, which the person confirms. Never type a password, never copy or export cookies or a browser profile, never use a separate profile, a server or another person's session. Logged out: stop and ask the person to sign in.
@@ -42,9 +54,9 @@ Use the Chrome tools to find controls by role and label, in English or French ("
 
 **Preflight.** Open your publication's own page, check the signed-in account and publication name against what the person told you, and check the Drafts and Scheduled lists and your own recent Notes for the same text (duplicate check). Find every control you will need (composer, image control, schedule control, final button) before typing. Any missing: stop.
 
-**Note.** Open `https://substack.com/home`, open the composer. Images first, through the composer's image control (not the clipboard); wait for the thumbnail. Then the text; read the composer back to a file and compare: `gate.py readback --approved A.txt --page B.txt`. Schedule if asked (rule 4). Get the person's yes (rule 2), run the audience check (rule 7), click the final button once. Confirm the "sent" or "scheduled" message and find the Note on your own profile (or in Scheduled); record its URL.
+**Note.** Open your own profile page (`https://substack.com/@your-handle`) and its Note composer, not the home feed; do not scroll or read the feed. If the composer is only reachable from the home feed, open it there and read nothing else (rule 6). The composer's final button is "Post" ("Publier"). Images first, through the composer's image control (not the clipboard); wait for the thumbnail. Then the text; read the composer back to a file and compare: `gate.py readback --approved A.txt --page B.txt`. Schedule if asked (rule 4). Then steps 5 to 7 of the sequence. Confirm the "sent" or "scheduled" message and find the Note on your own profile (or in Scheduled); record its URL.
 
-**Post.** Open `https://<your-publication>.substack.com/publish/post`. Title, then subtitle, then body. Do not type the body key by key (long text drops characters): insert it into the ProseMirror editor in chunks with `document.execCommand('insertHTML', ...)`, cursor at the end after each chunk, so images inserted between chunks land in place. Inline images: toolbar image control, then the file input of the dialog just opened. A failed image upload is an error: stop. Read the body back and compare the word count with the approved text; a mismatch stops the run (and take screenshots of top, middle and end). Add the subscribe button before Continue (otherwise a popup disrupts the flow): toolbar "Button", then "Subscribe". Hero image: the Settings button by `data-testid="settings-button"` (there are two "Settings" buttons), file input of that panel, then "Done". Continue; choose the audience by clicking its label (the radio may not update visibly); schedule if asked, writing the datetime-local value with the native setter plus `input` and `change` events, in the browser's time zone: check that zone matches `timezone` and read the scheduled time back. If the "publish without buttons" popup appears, stop. Run the audience check on the final button, get the person's yes, click once. Confirm the result and record the URL.
+**Post.** Open `https://<your-publication>.substack.com/publish/post`. Title, then subtitle, then body. Do not type the body key by key (long text drops characters): insert it into the ProseMirror editor in chunks with `document.execCommand('insertHTML', ...)`, cursor at the end after each chunk, so images inserted between chunks land in place. Inline images: toolbar image control, then the file input of the dialog just opened. A failed image upload is an error: stop. Read the body back and compare the word count with the approved text; a mismatch stops the run (and take screenshots of top, middle and end). Add the subscribe button before Continue (otherwise a popup disrupts the flow): toolbar "Button", then "Subscribe". Hero image: the Settings button by `data-testid="settings-button"` (there are two "Settings" buttons), file input of that panel, then "Done". Continue; choose the audience by clicking its label (the radio may not update visibly); schedule if asked, writing the datetime-local value with the native setter plus `input` and `change` events, in the browser's time zone: check that zone matches `timezone` and read the scheduled time back. If the "publish without buttons" popup appears, stop. Then steps 5 to 7 of the sequence. Confirm the result and record the URL.
 
 **End of run.** Exactly two outcomes: one item published or scheduled, identical to the approved text, with its images, audience and time, and its URL recorded; or a stop before the final click with the reason. Never a duplicate, never a different audience, never a silent partial success.
 
