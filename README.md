@@ -41,8 +41,7 @@ That's it. Every skill and plugin below becomes available in your Claude Code ag
 
 | Skill | What it does |
 |-------|--------------|
-| **publish-substack-note** | Publish a short-form Substack Note (image-first) via the Claude-in-Chrome extension. |
-| **publish-substack-post** | Publish or schedule a long-form Substack Post (inline images, hero, subscribe button) via Playwright — the selectors + timing that actually work. |
+| **publish-substack** | Publish or schedule one approved Substack Note or Post on your own account, in your own browser, after your explicit yes. Publishing only (no likes, comments or follows), stops at the first refusal. |
 
 ### Sales
 
