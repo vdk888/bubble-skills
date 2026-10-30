@@ -126,30 +126,16 @@
       ]
     },
     {
-      "name": "publish-substack-note",
-      "source": "./publish-substack-note",
-      "description": "Publish a short-form Substack Note with an optional hero image via the Claude-in-Chrome extension (Playwright gets 403 on Substack).",
-      "version": "1.0.0",
+      "name": "publish-substack",
+      "source": "./publish-substack",
+      "description": "Publish or schedule ONE approved Substack Note or Post on your own account, in your own visible browser, after your explicit yes. Publishing only, stops at the first refusal.",
+      "version": "2.0.0",
       "license": "MIT",
       "category": "content",
       "keywords": [
         "substack",
         "publishing",
         "content",
-        "automation"
-      ]
-    },
-    {
-      "name": "publish-substack-post",
-      "source": "./publish-substack-post",
-      "description": "Publish or schedule a long-form Substack Post with inline images, hero image, and subscribe button, via a logged-in Playwright browser profile. Selectors + timing that actually work.",
-      "version": "1.0.0",
-      "license": "MIT",
-      "category": "content",
-      "keywords": [
-        "substack",
-        "publishing",
-        "playwright",
         "scheduling"
       ]
     },
